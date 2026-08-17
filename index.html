@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI English Buddy For Kids 🎈</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header Navbar -->
+    <header>
+      <div class="logo">
+        <span>🎈</span> AI English Buddy
+      </div>
+      <button class="btn-parent-portal" id="btnOpenParentPortal">
+        <span>🔒</span> Góc Phụ Huynh
+      </button>
+    </header>
+
+    <!-- Màn hình 1: Chọn Nhân Vật -->
+    <main class="screen-selector" id="screenSelector">
+      <h1 class="title-main">Hôm nay bé muốn trò chuyện cùng ai?</h1>
+      <p class="subtitle">Hãy chọn một người bạn AI đồng hành thích hợp với lứa tuổi của bé nhé!</p>
+
+      <div class="persona-grid">
+        <div class="persona-card" onclick="selectCharacter('toby')">
+          <div class="persona-avatar">🐢</div>
+          <div class="persona-name">Toby the Turtle</div>
+          <div class="persona-tagline">Bạn rùa kiên nhẫn (Mầm non & Lớp 1-2)</div>
+        </div>
+
+        <div class="persona-card" onclick="selectCharacter('alex')">
+          <div class="persona-avatar">🧗‍♂️</div>
+          <div class="persona-name">Alex the Explorer</div>
+          <div class="persona-tagline">Bạn thám hiểm năng động (Lớp 3 - Lớp 5)</div>
+        </div>
+
+        <div class="persona-card" onclick="selectCharacter('leo')">
+          <div class="persona-avatar">🎧</div>
+          <div class="persona-name">Leo the Teen Peer</div>
+          <div class="persona-tagline">Bạn bản xứ 14 tuổi (Lớp 6 - Lớp 9)</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Màn hình 2: Chat Thoại 1-1 -->
+    <main class="screen-chat" id="screenChat">
+      <div class="chat-header">
+        <div class="active-character-info">
+          <span class="active-avatar" id="activeAvatar">🐢</span>
+          <div>
+            <h3 id="activeName">Toby the Turtle</h3>
+            <span style="font-size:0.85rem; color:#64748B;" id="activeTagline">Online & Lắng nghe</span>
+          </div>
+        </div>
+        <div class="timer-badge" id="timerBadge">⏱️ 15:00</div>
+      </div>
+
+      <div class="chat-body" id="chatBody">
+        <!-- Bubbles sẽ được render ở đây -->
+      </div>
+
+      <div class="chat-controls">
+        <button class="btn-mic" id="btnMic" onclick="handleMicClick()">🎙️</button>
+        <div class="status-label" id="statusLabel">Nhấn vào micro để nói chuyện với bạn AI</div>
+      </div>
+    </main>
+
+    <!-- Modal 1: Nhập Mã PIN Phụ Huynh -->
+    <div class="modal-overlay" id="modalPinOverlay">
+      <div class="modal-content" style="max-width: 380px;">
+        <div class="modal-header">
+          <h3>Mã PIN Phụ Huynh</h3>
+          <button class="modal-close" onclick="closePinModal()">✕</button>
+        </div>
+        <p style="margin-bottom: 16px; color:#64748B; font-size: 0.9rem;">Nhập mã PIN để truy cập Góc Phụ Huynh (Mặc định: 1234)</p>
+        <div class="form-group">
+          <input type="password" id="inputPin" placeholder="Nhập PIN 4 số" maxlength="4" style="text-align: center; font-size: 1.4rem; letter-spacing: 6px;">
+        </div>
+        <button class="btn-submit" onclick="submitPin()">Xác Nhận</button>
+      </div>
+    </div>
+
+    <!-- Modal 2: Góc Phụ Huynh & Insights -->
+    <div class="modal-overlay" id="modalDashboardOverlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>📊 Góc Phụ Huynh & Thấu Hiểu Cảm Xúc</h3>
+          <button class="modal-close" onclick="closeDashboardModal()">✕</button>
+        </div>
+
+        <div id="parentReportContainer">
+          <p style="color:#64748B;">Chưa có dữ liệu phiên trò chuyện. Hãy để bé bắt đầu cuộc nói chuyện đầu tiên!</p>
+        </div>
+
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid #E2E8F0;">
+
+        <h4>⚙️ Cài Đặt API Keys & Mã PIN</h4>
+        <div class="form-group" style="margin-top: 12px;">
+          <label>Mã PIN Mới</label>
+          <input type="text" id="settingPin" placeholder="1234">
+        </div>
+        <div class="form-group">
+          <label>Gemini API Key (Tùy chọn)</label>
+          <input type="password" id="settingGemini" placeholder="Dán API Key Gemini vào đây">
+        </div>
+        <div class="form-group">
+          <label>Cartesia API Key (Tùy chọn)</label>
+          <input type="password" id="settingCartesia" placeholder="Dán API Key Cartesia vào đây">
+        </div>
+        <div class="form-group">
+          <label>Deepgram API Key (Tùy chọn)</label>
+          <input type="password" id="settingDeepgram" placeholder="Dán API Key Deepgram vào đây">
+        </div>
+        <button class="btn-submit" onclick="saveAppSettings()">Lưu Cài Đặt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Các File Mô-Đun -->
+  <script src="config.js"></script>
+  <script src="js/audio_recorder.js"></script>
+  <script src="js/stt_service.js"></script>
+  <script src="js/llm_service.js"></script>
+  <script src="js/tts_service.js"></script>
+  <script src="js/voice_controller.js"></script>
+  <script src="js/sentiment_analyzer.js"></script>
+  <script src="js/parent_dashboard.js"></script>
+
+  <!-- Script Điều Khiển Ứng Dụng Main -->
+  <script>
+    let voiceController = null;
+    let parentDashboard = null;
+    let currentChatHistory = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      parentDashboard = new window.ParentDashboardModule();
+
+      // Khởi tạo Voice Controller kèm UI Callbacks
+      voiceController = new window.VoiceControllerModule({
+        onAIMessage: (text) => addBubble(text, 'ai'),
+        onUserMessage: (text) => addBubble(text, 'user'),
+        onStateChange: (state) => updateMicState(state),
+        onTimerUpdate: (remainingSec) => updateTimerUI(remainingSec),
+        onSessionEnd: (history) => handleSessionEnd(history)
+      });
+
+      // Bắt sự kiện nút Góc Phụ Huynh
+      document.getElementById('btnOpenParentPortal').addEventListener('click', () => {
+        document.getElementById('modalPinOverlay').style.display = 'flex';
+      });
+    });
+
+    // Chọn nhân vật AI
+    function selectCharacter(personaKey) {
+      document.getElementById('screenSelector').style.display = 'none';
+      document.getElementById('screenChat').style.display = 'flex';
+
+      const persona = voiceController.startSession(personaKey);
+      document.getElementById('activeAvatar').innerText = persona.avatar;
+      document.getElementById('activeName').innerText = persona.name;
+      document.getElementById('activeTagline').innerText = persona.tagline;
+    }
+
+    // Thêm bong bóng chat
+    function addBubble(text, sender) {
+      const chatBody = document.getElementById('chatBody');
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${sender}`;
+      bubble.innerText = text;
+      chatBody.appendChild(bubble);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Cập nhật trạng thái Micro UI
+    function updateMicState(state) {
+      const btnMic = document.getElementById('btnMic');
+      const statusLabel = document.getElementById('statusLabel');
+
+      if (state === 'handsfree_on' || state === 'listening') {
+        btnMic.className = 'btn-mic listening';
+        statusLabel.innerText = '🔴 MICRO LIÊN TỤC: Đang lắng nghe bé cất tiếng...';
+      } else if (state === 'processing') {
+        btnMic.className = 'btn-mic listening';
+        statusLabel.innerText = '🧠 AI đang suy nghĩ câu trả lời...';
+      } else if (state === 'speaking') {
+        btnMic.className = 'btn-mic';
+        statusLabel.innerText = '🔊 AI đang cất tiếng nói ra loa...';
+      } else {
+        btnMic.className = 'btn-mic';
+        statusLabel.innerText = 'Bật Micro 1 lần để đàm thoại rảnh tay liên tục';
+      }
+    }
+
+    // Cập nhật đếm ngược thời gian
+    function updateTimerUI(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      const formatted = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById('timerBadge').innerText = `⏱️ ${formatted}`;
+    }
+
+    // Xử lý khi bấm nút Micro (Bật/Tắt chế độ rảnh tay liên tục)
+    function handleMicClick() {
+      voiceController.toggleHandsFree();
+    }
+
+    // Xử lý khi phiên thúc kết
+    function handleSessionEnd(history) {
+      currentChatHistory = history;
+      renderParentReport();
+    }
+
+    // Render báo cáo Phụ huynh
+    function renderParentReport() {
+      const container = document.getElementById('parentReportContainer');
+      if (!currentChatHistory || currentChatHistory.length <= 2) return;
+
+      const report = parentDashboard.generateReport(currentChatHistory);
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+          <span><strong>Ngày:</strong> ${report.date}</span>
+          <span><strong>Số từ phát biểu:</strong> ~${report.wordCount} từ</span>
+        </div>
+        <div style="margin-bottom:12px;">
+          <strong>Chủ đề quan tâm:</strong> ${report.topics.map(t => `<span style="background:#E0E7FF; color:#3730A3; padding:2px 8px; border-radius:12px; font-size:0.85rem; margin-right:4px;">${t}</span>`).join('')}
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">💡 Thấu Hiểu Cảm Xúc Bé</div>
+          <div>${report.insight}</div>
+        </div>
+        <div class="advice-card">
+          <div class="advice-title">📌 Gợi Ý Hành Động Cho Bố Mẹ</div>
+          <div>${report.advice}</div>
+        </div>
+      `;
+    }
+
+    // Quản lý Modal PIN & Dashboard
+    function submitPin() {
+      const pin = document.getElementById('inputPin').value;
+      if (parentDashboard.verifyPin(pin)) {
+        document.getElementById('modalPinOverlay').style.display = 'none';
+        document.getElementById('modalDashboardOverlay').style.display = 'flex';
+        renderParentReport();
+      } else {
+        alert('Mã PIN không chính xác! (Mặc định: 1234)');
+      }
+    }
+
+    function closePinModal() {
+      document.getElementById('modalPinOverlay').style.display = 'none';
+    }
+
+    function closeDashboardModal() {
+      document.getElementById('modalDashboardOverlay').style.display = 'none';
+    }
+
+    function saveAppSettings() {
+      const newPin = document.getElementById('settingPin').value;
+      const gKey = document.getElementById('settingGemini').value;
+      const cKey = document.getElementById('settingCartesia').value;
+      const dKey = document.getElementById('settingDeepgram').value;
+      parentDashboard.saveSettings(newPin, gKey, cKey, dKey);
+      alert('Đã lưu cài đặt thành công!');
+      closeDashboardModal();
+    }
+  </script>
+</body>
+</html>

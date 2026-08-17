@@ -1,0 +1,21 @@
+# Security & Privacy - Giữ an toàn API Key & Dữ liệu nhạy cảm
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node modules & Logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Parent private logs & local secrets
+*.pem
+*.key
+parent_private_data/
