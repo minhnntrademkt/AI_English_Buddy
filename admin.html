@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard ⚙️ - AI English Buddy</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    body {
+      background: #F8FAFC;
+      padding: 30px 16px;
+    }
+    .admin-container {
+      width: 100%;
+      max-width: 1060px;
+      background: #FFFFFF;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      border: 2px solid #E2E8F0;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .admin-header {
+      padding: 24px 32px;
+      background: #FFFFFF;
+      border-bottom: 2px solid #F1E5D1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-login-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70vh;
+    }
+    .admin-login-box {
+      width: 100%;
+      max-width: 420px;
+      background: #FFFFFF;
+      padding: 36px;
+      border-radius: var(--radius-xl);
+      border: 2px solid #FBE8C5;
+      box-shadow: var(--shadow-mochi);
+    }
+    .admin-body {
+      padding: 32px;
+    }
+  </style>
+</head>
+<body>
+  <!-- MÀN HÌNH ĐĂNG NHẬP ADMIN (KHI CHƯA XÁC THỰC) -->
+  <div class="admin-login-wrapper" id="adminLoginScreen">
+    <div class="admin-login-box">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="font-size: 2.5rem; margin-bottom: 8px;">⚙️</div>
+        <h2 style="font-weight: 900; color: #0F172A;">Cổng Quản Trị Hệ Thống</h2>
+        <p style="font-size: 0.88rem; color: #64748B; margin-top: 4px;">Dành riêng cho Founder & Ban Quản Trị</p>
+      </div>
+
+      <div class="form-group">
+        <label>Tài khoản Quản trị</label>
+        <input type="text" id="adminUser" placeholder="Nhập username admin">
+      </div>
+      <div class="form-group">
+        <label>Mật khẩu Quản trị</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="adminPass" placeholder="••••••••">
+          <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('adminPass', this)" title="Ẩn / Hiện mật khẩu">
+            👁️
+          </button>
+        </div>
+      </div>
+      <button class="btn-mochi-indigo" style="width: 100%; margin-top: 8px;" onclick="handleAdminLogin()">
+        Đăng Nhập Quản Trị
+      </button>
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="/" style="font-size: 0.88rem; color: #64748B; text-decoration: none; font-weight: 700;">← Quay về Trang Chủ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BẢNG ĐIỀU KHIỂN QUẢN TRỊ ADMIN (KHI ĐÃ ĐĂNG NHẬP) -->
+  <div class="admin-container" id="adminDashboardScreen" style="display: none;">
+    <div class="admin-header">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h2 style="font-weight: 900; color: #0F172A;">⚙️ Bảng Quản Trị Hệ Thống (Founder Portal)</h2>
+          <span class="status-badge status-active">Admin Live</span>
+        </div>
+        <p style="font-size: 0.88rem; color: #64748B; margin-top: 4px;">Quản lý doanh thu, phân quyền gói cước & theo dõi an toàn cảm xúc trẻ em</p>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <a href="/" target="_blank" class="btn-mochi-secondary" style="text-decoration: none; font-size: 0.88rem;">
+          🌐 Xem Trang Chủ Web
+        </a>
+        <button class="btn-mochi-indigo" onclick="handleAdminLogout()">Đăng Xuất Admin</button>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <!-- Thanh điều hướng Tab Admin -->
+      <div class="admin-tabs-nav">
+        <button class="adm-tab-btn active" id="admTabBtnMetrics" onclick="switchAdminTab('metrics')">📊 Tổng Quan & Chỉ Số Tăng Trưởng</button>
+        <button class="adm-tab-btn" id="admTabBtnUsers" onclick="switchAdminTab('users')">👥 Quản Lý Phụ Huynh & Gói Cước</button>
+        <button class="adm-tab-btn" id="admTabBtnSafety" onclick="switchAdminTab('safety')">🛡️ Nhật Ký Cảm Xúc & An Toàn</button>
+      </div>
+
+      <!-- TAB 1: TỔNG QUAN CHỈ SỐ DOANH THU & HỌC TẬP -->
+      <div id="admTabMetrics">
+        <div class="admin-stats-grid">
+          <div class="stat-card">
+            <div class="stat-val revenue" id="admStatMRR">0 đ</div>
+            <div class="stat-lbl">Doanh Thu Dự Kiến (MRR)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="admStatAlphaUsers">0/5</div>
+            <div class="stat-lbl">Khách Hàng Alpha</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="admStatConvRate">0%</div>
+            <div class="stat-lbl">Tỷ Lệ Mua Gói (Conversion)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="admStatSentiment">85%</div>
+            <div class="stat-lbl">Chỉ Số Vui Vẻ Của Bé</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="admStatWordsTotal">0 từ</div>
+            <div class="stat-lbl">Tổng Từ Vựng Đã Luyện</div>
+          </div>
+        </div>
+
+        <div style="background:#FFFDF9; border:1.5px solid #FBE8C5; border-radius:14px; padding:22px;">
+          <h4 style="margin-bottom:12px; font-size:1rem; font-weight: 800; color:#78350F;">📦 Phân Bố Gói Cước Hệ Thống:</h4>
+          <div style="display:flex; gap:20px; flex-wrap:wrap; font-size:0.95rem;">
+            <div>🟢 <strong>Gói Kids Starter (299k/tháng):</strong> <span id="admCountStarter" style="font-weight: 800; color: #0369A1;">0</span> tài khoản</div>
+            <div>🟣 <strong>Gói Teen Pro (499k/tháng):</strong> <span id="admCountPro" style="font-weight: 800; color: #7E22CE;">0</span> tài khoản</div>
+            <div>⚪ <strong>Gói Miễn Phí (Alpha):</strong> <span id="admCountFree" style="font-weight: 800; color: #475569;">0</span> tài khoản</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: QUẢN LÝ TÀI KHOẢN PHỤ HUYNH -->
+      <div id="admTabUsers" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 style="font-weight: 800; font-size: 1.05rem;">👥 Danh Sách Phụ Huynh & Phân Quyền Gói Cước</h4>
+          <span style="font-size: 0.85rem; color: #64748B;">Giới hạn: Max 30 Khách Hàng Alpha (Tài khoản Founder không tính)</span>
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Tài Khoản (Bé)</th>
+                <th>Mã PIN</th>
+                <th>Gói Dịch Vụ</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác Quản Trị</th>
+              </tr>
+            </thead>
+            <tbody id="admUserTableBody">
+              <!-- Danh sách phụ huynh render ở đây -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: NHẬT KÝ AN TOÀN & CẢM XÚC -->
+      <div id="admTabSafety" style="display: none;">
+        <h4 style="margin-bottom:14px; font-weight: 800; font-size: 1.05rem;">🛡️ Nhật Ký Giám Sát Cảm Xúc & An Toàn Tâm Lý Trẻ</h4>
+        <div id="admSafetyListContainer">
+          <div class="safety-card">
+            <div>
+              <strong>🟢 Bé Minh (Founder VIP)</strong> - Hoàn thành phiên đàm thoại cùng Leo 🎧
+              <div style="font-size:0.85rem; color:#64748B; margin-top:2px;">Chỉ số cảm xúc: 95% Tích cực • Hào hứng với chủ đề Khoa học & Vũ trụ</div>
+            </div>
+            <span class="status-badge status-active">An Toàn</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="js/user_service.js"></script>
+  <script src="js/admin_service.js"></script>
+
+  <script>
+    let userService = null;
+    let adminService = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      userService = new window.UserServiceModule();
+      adminService = new window.AdminServiceModule();
+
+      if (adminService.isAdminLoggedIn()) {
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    });
+
+    function showLogin() {
+      document.getElementById('adminLoginScreen').style.display = 'flex';
+      document.getElementById('adminDashboardScreen').style.display = 'none';
+    }
+
+    function showDashboard() {
+      document.getElementById('adminLoginScreen').style.display = 'none';
+      document.getElementById('adminDashboardScreen').style.display = 'block';
+      renderAdminDashboard();
+    }
+
+    // Ẩn / Hiện mật khẩu khi bấm nút con mắt
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerText = '🙈';
+        btn.title = 'Ẩn mật khẩu';
+      } else {
+        input.type = 'password';
+        btn.innerText = '👁️';
+        btn.title = 'Hiện mật khẩu';
+      }
+    }
+
+    function handleAdminLogin() {
+      const u = document.getElementById('adminUser').value;
+      const p = document.getElementById('adminPass').value;
+      const res = adminService.login(u, p);
+      if (res.success) {
+        showDashboard();
+      } else {
+        alert(res.message);
+      }
+    }
+
+    function handleAdminLogout() {
+      adminService.logout();
+      showLogin();
+    }
+
+    function switchAdminTab(tab) {
+      document.getElementById('admTabBtnMetrics').className = (tab === 'metrics') ? 'adm-tab-btn active' : 'adm-tab-btn';
+      document.getElementById('admTabBtnUsers').className = (tab === 'users') ? 'adm-tab-btn active' : 'adm-tab-btn';
+      document.getElementById('admTabBtnSafety').className = (tab === 'safety') ? 'adm-tab-btn active' : 'adm-tab-btn';
+
+      document.getElementById('admTabMetrics').style.display = (tab === 'metrics') ? 'block' : 'none';
+      document.getElementById('admTabUsers').style.display = (tab === 'users') ? 'block' : 'none';
+      document.getElementById('admTabSafety').style.display = (tab === 'safety') ? 'block' : 'none';
+    }
+
+    function renderAdminDashboard() {
+      const analytics = adminService.getDetailedAnalytics();
+      
+      // Render Metrics
+      document.getElementById('admStatMRR').innerText = analytics.mrr.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('admStatAlphaUsers').innerText = `${analytics.alphaUsersCount}/${analytics.maxAlphaUsers}`;
+      document.getElementById('admStatConvRate').innerText = `${analytics.conversionRate}%`;
+      document.getElementById('admStatSentiment').innerText = `${analytics.avgSentiment}%`;
+      document.getElementById('admStatWordsTotal').innerText = `~${analytics.totalWords} từ`;
+
+      document.getElementById('admCountStarter').innerText = analytics.starterCount;
+      document.getElementById('admCountPro').innerText = analytics.proCount;
+      document.getElementById('admCountFree').innerText = analytics.freeCount;
+
+      // Render Users Table
+      const users = userService.getAllUsers();
+      const tbody = document.getElementById('admUserTableBody');
+
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#64748B;">Chưa có tài khoản phụ huynh nào đăng ký.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = users.map(u => {
+        const pkgText = u.isFounder ? 'VIP Founder (Toàn Quyền)' : ((u.package === 'kids_starter') ? 'Kids Starter (299k)' : ((u.package === 'teen_pro') ? 'Teen Pro (499k)' : 'Miễn Phí'));
+        const pkgClass = u.isFounder || u.package === 'teen_pro' ? 'pkg-pro' : ((u.package === 'kids_starter') ? 'pkg-starter' : 'pkg-free');
+        const isBlocked = u.status === 'blocked';
+
+        return `
+          <tr>
+            <td>
+              <strong>${u.username}</strong> ${u.isFounder ? '<span style="color:#D97706; font-size:0.75rem; font-weight:800;">[FOUNDER]</span>' : ''}<br>
+              <span style="font-size:0.8rem; color:#64748B;">(Bé: ${u.childName})</span>
+            </td>
+            <td><code>${u.parentPin}</code></td>
+            <td><span class="pkg-badge ${pkgClass}">${pkgText}</span></td>
+            <td><span class="status-badge ${isBlocked ? 'status-blocked' : 'status-active'}">${isBlocked ? 'Đã Khóa' : 'Hoạt Động'}</span></td>
+            <td>
+              <button class="btn-action-sm btn-act-pkg" onclick="promptAssignPackage('${u.id}')">Gán Gói</button>
+              <button class="btn-action-sm btn-act-block" onclick="toggleBlockUser('${u.id}')">${isBlocked ? 'Mở' : 'Khóa'}</button>
+              <button class="btn-action-sm btn-act-del" onclick="deleteUserPrompt('${u.id}', ${u.isFounder})">Xóa</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function promptAssignPackage(userId) {
+      const pkg = prompt("Chọn gói cước cấp cho phụ huynh:\n1: Kids Starter (299,000 VNĐ/tháng)\n2: Teen Pro (499,000 VNĐ/tháng)\n3: Trở về bản Miễn phí (Alpha)", "1");
+      if (pkg === "1") adminService.assignPackage(userId, 'kids_starter');
+      else if (pkg === "2") adminService.assignPackage(userId, 'teen_pro');
+      else if (pkg === "3") adminService.assignPackage(userId, 'free');
+      renderAdminDashboard();
+    }
+
+    function toggleBlockUser(userId) {
+      adminService.toggleUserStatus(userId);
+      renderAdminDashboard();
+    }
+
+    function deleteUserPrompt(userId, isFounder) {
+      if (isFounder) {
+        alert('Không thể xóa tài khoản Founder Test mặc định!');
+        return;
+      }
+      if (confirm('Bạn có chắc chắn muốn xóa tài khoản phụ huynh này?')) {
+        adminService.deleteUser(userId);
+        renderAdminDashboard();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -4,15 +4,48 @@ class LLMServiceModule {
     this.chatHistory = [];
   }
 
-  // Khởi tạo phiên trò chuyện với Persona được chọn
-  initSession(personaKey) {
+  // Khởi tạo phiên trò chuyện với Persona và Hồ sơ của Bé hiện tại
+  initSession(personaKey, activeChild) {
     const persona = window.APP_CONFIG.PERSONAS[personaKey] || window.APP_CONFIG.PERSONAS.toby;
     this.persona = persona;
+    this.activeChild = activeChild;
+
+    let childContext = '';
+    if (window.userService && activeChild) {
+      childContext = window.userService.getChildAIContext(activeChild.id);
+    } else if (activeChild) {
+      const preferredEnglishName = activeChild.englishName?.trim() || activeChild.nickname?.trim() || activeChild.name?.trim() || 'friend';
+      const interestsText = activeChild.interests && activeChild.interests.trim() !== ''
+        ? `Child's Verified Interests: "${activeChild.interests}"`
+        : `Child's Interests: Not specified yet. Warmly ask what they like!`;
+      childContext = `\n\nCURRENT CHILD PROFILE (MUST ADAPT TO THIS SPECIFIC CHILD):
+- Child English Name: ${preferredEnglishName} (Vietnamese Name: ${activeChild.name})
+- Age: ${activeChild.age} years old | Grade: ${activeChild.grade}
+- ${interestsText}
+- PRONUNCIATION & ADDRESSING RULE: ALWAYS address the child warmly by their English name "${preferredEnglishName}"! Never mispronounce Vietnamese names with English phonetics — just call them "${preferredEnglishName}".`;
+    }
+
+    const fullSystemPrompt = persona.systemPrompt + childContext;
+    const initialGreeting = this.getInitialGreeting(persona, activeChild);
+
     this.chatHistory = [
-      { role: 'user', parts: [{ text: persona.systemPrompt }] },
-      { role: 'model', parts: [{ text: `Hi there! I am ${persona.name}. What's your name?` }] }
+      { role: 'user', parts: [{ text: fullSystemPrompt }] },
+      { role: 'model', parts: [{ text: initialGreeting }] }
     ];
     return persona;
+  }
+
+  // Lấy câu chào mở đầu cá nhân hóa chính xác theo Tên Tiếng Anh của bé và nhân vật cố định
+  getInitialGreeting(persona, activeChild) {
+    const childName = activeChild?.englishName?.trim() || activeChild?.nickname?.trim() || activeChild?.name?.trim() || 'my friend';
+    if (persona?.id === 'toby') {
+      return `Hello ${childName}! I am Toby the Turtle 🐢. What fun thing do you want to talk about today?`;
+    } else if (persona?.id === 'alex') {
+      return `Hello ${childName}! I am Alex the Explorer 🧗‍♂️. What exciting story or adventure are we exploring today?`;
+    } else if (persona?.id === 'leo') {
+      return `Hello ${childName}! I am Leo 🎮. Ready for an awesome English conversation today, ${childName}?`;
+    }
+    return `Hello ${childName}! I am ${persona?.name || 'your buddy'}. Let's have fun chatting!`;
   }
 
   // Gửi câu nói của bé và lấy phản hồi từ AI

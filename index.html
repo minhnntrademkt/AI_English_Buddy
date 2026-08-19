@@ -2,91 +2,290 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI English Buddy For Kids 🎈</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#FFF9EB">
+  <title>AI English Buddy For Kids 🎈 - Học Tiếng Anh 1-on-1 Cùng Bạn AI 3D</title>
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
   <div id="app">
-    <!-- Header Navbar -->
+    <!-- Header Navbar Mochidemy Style -->
     <header>
-      <div class="logo">
+      <div class="logo" onclick="handleLogoClick()">
         <span>🎈</span> AI English Buddy
+        <span class="logo-badge">For Kids</span>
       </div>
-      <button class="btn-parent-portal" id="btnOpenParentPortal">
-        <span>🔒</span> Góc Phụ Huynh
-      </button>
+      <div class="header-actions">
+        <!-- Nút khi CHƯA đăng nhập -->
+        <button class="btn-mochi-secondary btn-header-login" id="btnOpenAuthLogin" onclick="openAuthModal('login')">Đăng Nhập</button>
+        <button class="btn-mochi-primary btn-header-register" id="btnOpenAuthRegister" onclick="openAuthModal('register')">Đăng Ký</button>
+        
+        <!-- Nút khi ĐÃ đăng nhập -->
+        <button class="btn-parent-portal" id="btnOpenParentPortal" style="display: none; position: relative;">
+          <span>🔒</span> <span class="btn-text">Góc Phụ Huynh</span>
+          <span id="stealthAlertBadge" class="stealth-pulse-dot" style="display: none;" title="Có cảnh báo an toàn cần lưu ý"></span>
+        </button>
+        <button class="btn-mochi-secondary" id="btnLogout" onclick="handleLogout()" style="display: none;">
+          <span>🚪</span> <span class="btn-text">Đăng Xuất</span>
+        </button>
+      </div>
     </header>
 
-    <!-- Màn hình 1: Chọn Nhân Vật -->
-    <main class="screen-selector" id="screenSelector">
-      <h1 class="title-main">Hôm nay bé muốn trò chuyện cùng ai?</h1>
-      <p class="subtitle">Hãy chọn một người bạn AI đồng hành thích hợp với lứa tuổi của bé nhé!</p>
-
-      <div class="persona-grid">
-        <div class="persona-card" onclick="selectCharacter('toby')">
-          <div class="persona-avatar">🐢</div>
-          <div class="persona-name">Toby the Turtle</div>
-          <div class="persona-tagline">Bạn rùa kiên nhẫn (Mầm non & Lớp 1-2)</div>
+    <!-- 🌟 TRANG CHỦ CHƯA ĐĂNG NHẬP (CHUẨN MOCHIDEMY LANDING PAGE) -->
+    <div id="landingView">
+      <!-- Hero Banner -->
+      <section class="mochi-hero">
+        <div class="mochi-hero-text">
+          <div class="mochi-hero-badge">
+            <span>✨</span> Ứng dụng Adaptive Voice AI cho trẻ em Việt Nam
+          </div>
+          <h1 class="mochi-hero-title">
+            Bé Tự Tin Giao Tiếp Tiếng Anh 1-on-1 <span class="highlight">Không Sợ Sai</span> Cùng AI Buddy 3D
+          </h1>
+          <p class="mochi-hero-desc">
+            Người bạn AI Mascot 3D bản xứ đồng hành 24/7 từ Mầm non đến Cấp 2, cử động mấp máy môi sinh động giúp con phản xạ nói tự nhiên, kết hợp Báo cáo Thấu hiểu Tâm lý dành riêng cho Bố Mẹ.
+          </p>
+          <div class="mochi-hero-cta">
+            <button class="btn-mochi-primary" onclick="openAuthModal('register')">
+              🚀 Bắt Đầu Học Thử Ngay
+            </button>
+            <button class="btn-mochi-secondary" onclick="openAuthModal('login')">
+              Bạn đã có tài khoản? Đăng nhập
+            </button>
+          </div>
         </div>
 
-        <div class="persona-card" onclick="selectCharacter('alex')">
-          <div class="persona-avatar">🧗‍♂️</div>
-          <div class="persona-name">Alex the Explorer</div>
-          <div class="persona-tagline">Bạn thám hiểm năng động (Lớp 3 - Lớp 5)</div>
+        <div class="mochi-hero-graphic">
+          <div class="mascot-cluster">
+            <div class="hero-mascot-item" id="heroMascotToby"></div>
+            <div class="hero-mascot-item featured" id="heroMascotAlex"></div>
+            <div class="hero-mascot-item" id="heroMascotLeo"></div>
+          </div>
+          <div class="mascot-bubble-talk">
+            👋 "Hello! Let's talk together!"
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 1: "AI English Buddy giúp bé học hiệu quả như thế nào?" -->
+      <section class="mochi-section">
+        <div class="mochi-section-title">
+          <h2>AI English Buddy giúp con học tiếng Anh <br/> hiệu quả như thế nào?</h2>
+          <p>Phương pháp Adaptive Voice AI đột phá kết hợp hình ảnh Mascot 3D mấp máy môi tương tác</p>
         </div>
 
-        <div class="persona-card" onclick="selectCharacter('leo')">
-          <div class="persona-avatar">🎧</div>
-          <div class="persona-name">Leo the Teen Peer</div>
-          <div class="persona-tagline">Bạn bản xứ 14 tuổi (Lớp 6 - Lớp 9)</div>
+        <div class="mochi-cards-grid">
+          <div class="mochi-feature-card">
+            <div class="mochi-card-icon">🎯</div>
+            <h3 class="mochi-card-title">3 Nhân Vật Mascot 3D Cho 3 Lứa Tuổi</h3>
+            <p class="mochi-card-desc">Bạn Rùa Toby (Mầm non & Lớp 1-2 nói chậm rãi), Thám hiểm Alex (Cấp 1 Lego/Minecraft), và Leo bản xứ (Cấp 2 IELTS Speaking) với cử động miệng theo thời gian thực.</p>
+          </div>
+
+          <div class="mochi-feature-card">
+            <div class="mochi-card-icon">🎙️</div>
+            <h3 class="mochi-card-title">Đàm Thoại Rảnh Tay 1-on-1</h3>
+            <p class="mochi-card-desc">Bé chỉ cần chạm mở Micro 1 lần duy nhất! Hệ thống Voice AI tự động lắng nghe và phản hồi liên tục hai chiều như một cuộc trò chuyện tự nhiên ngoài đời thật.</p>
+          </div>
+
+          <div class="mochi-feature-card">
+            <div class="mochi-card-icon">📊</div>
+            <h3 class="mochi-card-title">Góc Phụ Huynh Thấu Hiểu Cảm Xúc</h3>
+            <p class="mochi-card-desc">Báo cáo sau mỗi buổi học phân tích chỉ số cảm xúc, phát hiện chủ đề con quan tâm và đưa ra lời khuyên tâm lý hữu ích để bố mẹ thấu hiểu con hơn.</p>
+          </div>
         </div>
+      </section>
+
+      <!-- Section 2: FAQ Accordion (Bố Mẹ Hỏi, AI Buddy Trả Lời!) -->
+      <section class="mochi-faq-section">
+        <div class="mochi-section-title">
+          <h2>Bố mẹ hỏi, AI English Buddy trả lời!</h2>
+          <p>Những thắc mắc phổ biến nhất của phụ huynh khi cho con luyện nói cùng bạn AI</p>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Bé còn nhút nhát hoặc nói chưa chuẩn có học được không?</span>
+              <span>➕</span>
+            </div>
+            <div class="faq-answer">
+              AI Buddy được thiết kế cực kỳ kiên nhẫn, sử dụng kỹ thuật Recasting (sửa lỗi dịu dàng mà không ngắt lời hay phán xét). Bé sẽ cảm thấy thoải mái như nói chuyện với bạn gấu bông và tự tin mở lời sau vài phút.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Chế độ Đàm Thoại Rảnh Tay (Hands-free) hoạt động ra sao?</span>
+              <span>➕</span>
+            </div>
+            <div class="faq-answer">
+              Bé chỉ cần nhấn nút Micro một lần duy nhất lúc bắt đầu. Khi bé cất tiếng nói, Micro tự thu âm; khi bé dừng lại, AI sẽ suy nghĩ và phát âm thanh câu trả lời ra loa; sau đó Micro tự bật lại chờ bé nói tiếp mà không cần bấm thêm bất cứ nút nào.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Bố mẹ theo dõi tiến trình và tâm lý của con như thế nào?</span>
+              <span>➕</span>
+            </div>
+            <div class="faq-answer">
+              Bố mẹ chỉ cần vào mục "Góc Phụ Huynh" và nhập mã PIN 4 số cá nhân. Toàn bộ số từ vựng bé phát biểu, chủ đề con yêu thích và lời khuyên tâm lý sẽ được tổng hợp đầy đủ, bảo mật riêng biệt cho từng gia đình.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Bản thử nghiệm Alpha có giới hạn số lượng không?</span>
+              <span>➕</span>
+            </div>
+            <div class="faq-answer">
+              Để đảm bảo chất lượng theo dõi sát sao từng bé, giai đoạn Alpha mở rộng tối đa 30 tài khoản phụ huynh đăng ký sớm nhất để trải nghiệm miễn phí toàn bộ tính năng cao cấp.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Bottom CTA -->
+      <section class="mochi-section mochi-bottom-cta">
+        <h2 class="bottom-cta-title">Khởi đầu hành trình phản xạ tiếng Anh tự nhiên cho con ngay hôm nay!</h2>
+        <p class="bottom-cta-desc">Trải nghiệm bạn AI đồng hành 1-on-1 thế hệ mới cùng hàng trăm phút trò chuyện sinh động.</p>
+        <button class="btn-mochi-primary btn-bottom-cta" onclick="openAuthModal('register')">
+          🚀 Tạo Tài Khoản Dùng Thử Cho Bé
+        </button>
+      </section>
+
+      <!-- Footer Mochidemy Style -->
+      <footer class="mochi-footer">
+        <div>
+          <strong>AI English Buddy For Kids 🎈</strong>
+          <div style="font-size: 0.82rem; margin-top: 4px;">Nền tảng giao tiếp tiếng Anh 1-on-1 tích hợp AI Mascot 3D thấu cảm cảm xúc trẻ em.</div>
+        </div>
+        <div>
+          <span>Liên hệ hỗ trợ: <strong>support@aienglishbuddy.vn</strong></span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- 🎮 MÀN HÌNH CHỌN HỒ SƠ BÉ ĐÃ GẮN GÓI CỐ ĐỊNH (FIXED PACKAGE PER CHILD) -->
+    <main class="screen-selector" id="screenSelector" style="display: none;">
+      <!-- Banner Chào Mừng & Chọn Bé -->
+      <div class="kid-welcome-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div class="kid-welcome-left">
+          <div class="kid-greeting-title" id="welcomeChildGreeting">👋 Danh Sách Các Bé Trong Gia Đình</div>
+          <div class="kid-greeting-sub" id="welcomeChildSub">Mỗi bé được cố định 1 Gói học & Bạn AI đồng hành. Bấm vào bé để bắt đầu học ngay:</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button type="button" onclick="openAddChildModal()" style="background: #FFFFFF; color: #0284C7; border: 2px solid #0284C7; font-weight: 800; font-size: 0.86rem; padding: 8px 16px; border-radius: 12px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+            ➕ Thêm Bé Mới
+          </button>
+          <div class="kid-pkg-badge" id="userPkgBadge">⭐ VIP</div>
+        </div>
+      </div>
+
+      <!-- Lưới Thẻ Hồ Sơ Các Bé Đã Gắn Gói Cố Định -->
+      <div class="persona-grid" id="purchasedPackagesGrid">
+        <!-- Render động thẻ các bé -->
       </div>
     </main>
 
-    <!-- Màn hình 2: Chat Thoại 1-1 -->
+    <!-- Màn hình 2: Chat Thoại 1-1 Với Bố Cục Sân Khấu 3D Bên Trái & Khung Phụ Đề Bên Phải -->
     <main class="screen-chat" id="screenChat">
+      <!-- Header phòng Chat Kèm Nút Quay Lại & Đồng Hồ -->
       <div class="chat-header">
+        <button class="btn-back-stage" onclick="handleBackToSelector()">
+          ← Đổi Bạn AI Khác
+        </button>
         <div class="active-character-info">
-          <span class="active-avatar" id="activeAvatar">🐢</span>
+          <div class="active-avatar-wrap" id="activeAvatarWrap"></div>
           <div>
-            <h3 id="activeName">Toby the Turtle</h3>
+            <h3 id="activeName" style="font-weight: 900;">Toby the Turtle</h3>
             <span style="font-size:0.85rem; color:#64748B;" id="activeTagline">Online & Lắng nghe</span>
           </div>
         </div>
         <div class="timer-badge" id="timerBadge">⏱️ 15:00</div>
       </div>
 
-      <div class="chat-body" id="chatBody">
-        <!-- Bubbles sẽ được render ở đây -->
-      </div>
+      <!-- 🎭 BỐ CỤC CHÍNH 2 CỘT: TRÁI = SÂN KHẤU 3D CHÍNH | PHẢI = PHỤ ĐỀ HỖ TRỢ -->
+      <div class="room-split-layout">
+        <!-- CỘT TRÁI: SÂN KHẤU MASCOT 3D MẶT ĐỐI MẶT & MICRO NÓI -->
+        <div class="stage-left-panel">
+          <div class="stage-podium">
+            <!-- Khung Mascot 3D Lớn (Mấp máy môi & Bồng bềnh, Chạm để ngắt lời AI) -->
+            <div class="stage-mascot-avatar" id="mascotAvatarBox" onclick="if(voiceController && voiceController.isAISpeaking) voiceController.interruptAI();" title="Chạm vào để ngắt lời AI">
+              <!-- Mascot 3D CGI Render & 3D Mouth Lip-sync được nạp ở đây -->
+            </div>
 
-      <div class="chat-controls">
-        <button class="btn-mic" id="btnMic" onclick="handleMicClick()">🎙️</button>
-        <div class="status-label" id="statusLabel">Nhấn vào micro để nói chuyện với bạn AI</div>
+            <!-- Tên & Thông điệp nhân vật -->
+            <div class="stage-character-meta">
+              <div class="stage-character-name" id="stageCharacterName">Toby the Turtle</div>
+              <div class="stage-character-tagline" id="stageCharacterTagline">Bạn rùa 3D kiên nhẫn, nói chậm rãi</div>
+            </div>
+          </div>
+
+          <!-- Trạng thái & Sóng âm thanh sinh động -->
+          <div class="mascot-live-indicator">
+            <div class="mascot-state-pill" id="mascotStatePill">
+              <div class="mascot-soundbars" id="mascotSoundbars">
+                <span class="soundbar"></span>
+                <span class="soundbar"></span>
+                <span class="soundbar"></span>
+                <span class="soundbar"></span>
+              </div>
+              <span id="mascotStateText">Đang sẵn sàng trò chuyện</span>
+            </div>
+            <div style="font-size:0.82rem; color:#78350F; font-weight:700;" id="mascotSubStateText">Bé nhìn vào bạn AI và bấm Micro để nói nhé!</div>
+          </div>
+
+          <!-- Nút Micro lớn rảnh tay -->
+          <div class="stage-mic-box">
+            <button class="btn-mic" id="btnMic" onclick="handleMicClick()">🎙️</button>
+            <div class="status-label" id="statusLabel">Bật Micro 1 lần để đàm thoại rảnh tay liên tục</div>
+          </div>
+        </div>
+
+        <!-- CỘT PHẢI: KHUNG LỜI THOẠI & PHỤ ĐỀ PHỤ TRỢ CHO BÉ -->
+        <div class="chat-right-panel">
+          <div class="chat-right-header">
+            <span>💬</span> Lời Thoại & Phụ Đề Hỗ Trợ
+          </div>
+          <div class="chat-body" id="chatBody">
+            <!-- Bong bóng chat được render ở đây -->
+          </div>
+          <div class="chat-input-bar" style="padding: 10px 14px; background: #FFFFFF; border-top: 1.5px solid #F1F5F9;">
+            <form onsubmit="handleSendTextMessage(event)" style="display: flex; gap: 8px; width: 100%;">
+              <input type="text" id="chatTextInput" placeholder="Bé có thể gõ hoặc nói vào micro..." style="flex:1; padding: 10px 14px; border-radius: 14px; border: 2px solid #E2E8F0; font-size: 0.92rem; outline: none; background: #F8FAFC;" autocomplete="off" />
+              <button type="submit" style="background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); color: white; border: none; border-radius: 12px; padding: 0 16px; font-weight: 800; font-size: 0.9rem; cursor: pointer; white-space: nowrap;">Gửi 🚀</button>
+            </form>
+          </div>
+        </div>
       </div>
     </main>
 
-    <!-- Modal 1: Nhập Mã PIN Phụ Huynh -->
-    <div class="modal-overlay" id="modalPinOverlay">
-      <div class="modal-content" style="max-width: 380px;">
+    <!-- Modal 1: Nhập Mã PIN Phụ Huynh (Bảo mật tuyệt đối, vô hiệu hóa gợi ý tự động điền) -->
+    <div class="modal-overlay" id="modalPinOverlay" style="display: none;" onclick="if(event.target===this) closePinModal();">
+      <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header">
-          <h3>Mã PIN Phụ Huynh</h3>
+          <h3 style="font-weight: 900;">🔒 Xác Thực Phụ Huynh</h3>
           <button class="modal-close" onclick="closePinModal()">✕</button>
         </div>
-        <p style="margin-bottom: 16px; color:#64748B; font-size: 0.9rem;">Nhập mã PIN để truy cập Góc Phụ Huynh (Mặc định: 1234)</p>
+        <p style="margin-bottom: 18px; color:#64748B; font-size: 0.92rem;">Khu vực dành riêng cho Bố Mẹ. Vui lòng nhập mã PIN 4 số cá nhân để tiếp tục.</p>
         <div class="form-group">
-          <input type="password" id="inputPin" placeholder="Nhập PIN 4 số" maxlength="4" style="text-align: center; font-size: 1.4rem; letter-spacing: 6px;">
+          <div class="password-input-wrapper">
+            <input type="password" id="inputPin" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" style="text-align: center; font-size: 1.8rem; letter-spacing: 12px; font-weight: 900;">
+          </div>
         </div>
-        <button class="btn-submit" onclick="submitPin()">Xác Nhận</button>
+        <div id="pinErrorMsg" style="color: #DC2626; font-size: 0.82rem; font-weight: 700; text-align: center; margin-bottom: 12px; display: none;"></div>
+        <button class="btn-mochi-primary" style="width:100%;" onclick="submitPin()">Mở Góc Phụ Huynh</button>
       </div>
     </div>
 
     <!-- Modal 2: Góc Phụ Huynh & Insights -->
-    <div class="modal-overlay" id="modalDashboardOverlay">
+    <div class="modal-overlay" id="modalDashboardOverlay" style="display: none;" onclick="if(event.target===this) closeDashboardModal();">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>📊 Góc Phụ Huynh & Thấu Hiểu Cảm Xúc</h3>
+          <h3 style="font-weight: 900;">📊 Góc Phụ Huynh & Thấu Hiểu Cảm Xúc</h3>
           <button class="modal-close" onclick="closeDashboardModal()">✕</button>
         </div>
 
@@ -94,26 +293,339 @@
           <p style="color:#64748B;">Chưa có dữ liệu phiên trò chuyện. Hãy để bé bắt đầu cuộc nói chuyện đầu tiên!</p>
         </div>
 
-        <hr style="margin: 20px 0; border: none; border-top: 1px solid #E2E8F0;">
+        <hr style="margin: 24px 0; border: none; border-top: 1.5px solid #F1E5D1;">
 
-        <h4>⚙️ Cài Đặt API Keys & Mã PIN</h4>
-        <div class="form-group" style="margin-top: 12px;">
-          <label>Mã PIN Mới</label>
-          <input type="text" id="settingPin" placeholder="1234">
-        </div>
+        <h4 style="font-weight: 900;">🔑 Đổi Mã PIN Phụ Huynh</h4>
+        <p style="font-size:0.88rem; color:#64748B; margin-bottom:12px;">Đặt lại mã PIN 4 số cá nhân để bảo mật thông tin báo cáo của con.</p>
         <div class="form-group">
-          <label>Gemini API Key (Tùy chọn)</label>
-          <input type="password" id="settingGemini" placeholder="Dán API Key Gemini vào đây">
+          <div class="password-input-wrapper">
+            <input type="password" id="settingNewPin" placeholder="Nhập mã PIN 4 số mới" maxlength="4" style="text-align: center; font-size: 1.2rem; letter-spacing: 6px;">
+            <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('settingNewPin', this)" title="Ẩn / Hiện mã PIN">
+              👁️
+            </button>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Cartesia API Key (Tùy chọn)</label>
-          <input type="password" id="settingCartesia" placeholder="Dán API Key Cartesia vào đây">
+        <button class="btn-mochi-primary" style="width:100%;" onclick="saveNewPin()">Cập Nhật Mã PIN</button>
+      </div>
+    </div>
+
+    <!-- Modal 3: Đăng Nhập & Đăng Ký Phụ Huynh (Hỗ trợ Google Sign-In & Tự động lưu mật khẩu) -->
+    <div class="modal-overlay" id="modalAuthOverlay" style="display: none;" onclick="if(event.target===this) closeAuthModal();">
+      <div class="modal-content" style="max-width: 440px;">
+        <div class="modal-header">
+          <h3 id="authModalTitle" style="font-weight: 900;">🔑 Đăng Nhập Phụ Huynh</h3>
+          <button class="modal-close" onclick="closeAuthModal()">✕</button>
         </div>
-        <div class="form-group">
-          <label>Deepgram API Key (Tùy chọn)</label>
-          <input type="password" id="settingDeepgram" placeholder="Dán API Key Deepgram vào đây">
+
+        <!-- Nút Đăng nhập 1-Chạm qua Google -->
+        <button class="btn-google-auth" onclick="handleGoogleAuth()">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Tiếp tục với Google</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>Hoặc đăng nhập bằng tài khoản</span>
         </div>
-        <button class="btn-submit" onclick="saveAppSettings()">Lưu Cài Đặt</button>
+
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Đăng Nhập</div>
+          <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Đăng Ký Mới (Max 30)</div>
+        </div>
+
+        <!-- Form Đăng Nhập (Tương thích Google Password Manager Autofill) -->
+        <form id="formLogin" onsubmit="event.preventDefault(); handleLogin();">
+          <p style="font-size:0.9rem; color:#64748B; margin-bottom:16px;">Vui lòng đăng nhập để mở khóa các bạn AI và lưu tiến trình trò chuyện riêng cho bé.</p>
+          <div class="form-group">
+            <label>Tên đăng nhập / Email</label>
+            <input type="text" id="loginUsername" name="username" autocomplete="username" placeholder="Nhập tên đăng nhập hoặc email" required>
+          </div>
+          <div class="form-group">
+            <label>Mật khẩu</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required>
+              <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('loginPassword', this)" title="Ẩn / Hiện mật khẩu">
+                👁️
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-mochi-primary" style="width:100%; margin-top:6px;">Đăng Nhập Ngay</button>
+        </form>
+
+        <!-- Form Đăng Ký -->
+        <form id="formRegister" style="display: none;" onsubmit="event.preventDefault(); handleRegister();">
+          <div style="background: #FFFBEB; color: #92400E; padding: 12px; border-radius: 14px; font-size: 0.88rem; margin-bottom: 16px; border: 1.5px solid #FDE68A;">
+            ⚡ Bản thử nghiệm Alpha mở rộng tối đa <strong>30 tài khoản phụ huynh</strong> để theo dõi sát sao từng bé.
+          </div>
+          <div class="form-group">
+            <label>Tên tài khoản phụ huynh *</label>
+            <input type="text" id="regUsername" name="username" autocomplete="username" placeholder="Tạo tên tài khoản hoặc email" required>
+          </div>
+          <div class="form-group">
+            <label>Mật khẩu *</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regPassword" name="new-password" autocomplete="new-password" placeholder="Tạo mật khẩu bảo mật" required>
+              <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('regPassword', this)" title="Ẩn / Hiện mật khẩu">
+                👁️
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Mã PIN Phụ Huynh 4 số * <span style="font-size: 0.8rem; color: #64748B; font-weight: normal;">(Bảo mật Góc Phụ Huynh)</span></label>
+            <div class="password-input-wrapper">
+              <input type="password" id="regParentPin" placeholder="Nhập mã PIN 4 số" maxlength="4" style="text-align: center; font-size: 1.2rem; letter-spacing: 6px;">
+              <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility('regParentPin', this)" title="Ẩn / Hiện mã PIN">
+                👁️
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-mochi-primary" style="width:100%; margin-top:6px;">Tạo Tài Khoản Phụ Huynh</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal 4: 🛡️ Cảnh Báo An Toàn Học Đường & Vấn Đề Nhạy Cảm (Stealth Safety Warning) -->
+    <div class="modal-overlay" id="modalSafetyAlertOverlay" style="display: none;" onclick="if(event.target===this) closeSafetyAlertModal();">
+      <div class="modal-content" style="max-width: 580px; border: 2.5px solid #F87171;">
+        <div class="modal-header" style="border-bottom: 1.5px solid #FEE2E2; padding-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.6rem;">🛡️</span>
+            <div>
+              <h3 style="font-weight: 900; color: #DC2626; margin: 0; font-size: 1.15rem;">CẢNH BÁO AN TOÀN HỌC ĐƯỜNG & TÂM LÝ</h3>
+              <p style="margin: 0; font-size: 0.78rem; color: #64748B;">Hệ thống phát hiện dấu hiệu cần phụ huynh đồng hành khẩn cấp</p>
+            </div>
+          </div>
+          <button class="modal-close" onclick="closeSafetyAlertModal()">✕</button>
+        </div>
+
+        <div id="safetyAlertsListContainer" style="margin: 18px 0; max-height: 52vh; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
+          <!-- Danh sách cảnh báo được render động -->
+        </div>
+
+        <div style="background: #FEF2F2; border-radius: 14px; padding: 14px; border: 1px solid #FECACA; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px;">
+          <div>
+            <div style="font-weight: 800; color: #991B1B; font-size: 0.88rem;">📞 Tổng đài Quốc gia Bảo vệ Trẻ em</div>
+            <div style="font-size: 0.76rem; color: #B91C1C;">Miễn phí 24/7 bảo vệ & tư vấn pháp lý cho trẻ em</div>
+          </div>
+          <a href="tel:111" style="background: #DC2626; color: white; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 0.84rem; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px;">
+            Gọi 111
+          </a>
+        </div>
+
+        <button class="btn-mochi-primary" style="width:100%; background: #475569; color: white; border-color: #334155;" onclick="acknowledgeSafetyAlerts()">
+          ✓ Tôi Đã Đọc & Sẽ Chủ Động Trò Chuyện Cùng Con
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal 5: 👧 Thêm Hồ Sơ Bé Mới (Tùy biến theo 3 nhóm tuổi & lớp học) -->
+    <div class="modal-overlay" id="modalAddChildOverlay" style="display: none;" onclick="if(event.target===this) closeAddChildModal();">
+      <div class="modal-content" style="max-width: 480px;">
+        <div class="modal-header">
+          <h3 style="font-weight: 900;">👧 Thêm Hồ Sơ Bé Mới</h3>
+          <button class="modal-close" onclick="closeAddChildModal()">✕</button>
+        </div>
+        <form onsubmit="event.preventDefault(); handleAddChildSubmit();">
+          <div class="form-group">
+            <label>Họ và tên chính thức của bé (tiếng Việt) *</label>
+            <input type="text" id="newChildName" placeholder="Ví dụ: Nguyễn Minh Khôi, Trần Tuệ Nhi..." required>
+          </div>
+          <div class="form-group">
+            <label>Tên tiếng Anh hoặc Biệt danh ở nhà 🌟 <span style="font-size: 0.8rem; color: #0284C7; font-weight: 700;">(AI sẽ xưng hô tên này khi nói tiếng Anh)</span></label>
+            <input type="text" id="newChildEnglishName" placeholder="Ví dụ: Lucas, Emma, Leo, Bon, Soc, Tom... (để trống nếu không có)">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label>Độ tuổi của bé *</label>
+              <input type="number" id="newChildAge" min="4" max="15" value="8" required oninput="handleAgeInputChange(this.value)" onchange="handleAgeInputChange(this.value)">
+            </div>
+            <div class="form-group">
+              <label>Lớp học / Nhóm *</label>
+              <select id="newChildGrade" onchange="handleGradeSelectChange(this.value)" style="width: 100%; padding: 12px 14px; border: 1.5px solid #CBD5E1; border-radius: 12px; font-weight: 700; font-family: inherit;">
+                <optgroup label="👶 Nhóm Mầm Non (4 - 6 tuổi)">
+                  <option value="Mầm non Mầm (4t)">Mầm (4 tuổi)</option>
+                  <option value="Mầm non Chồi (5t)">Chồi (5 tuổi)</option>
+                  <option value="Tiền tiểu học Lá (6t)">Lá / Tiền tiểu học (6 tuổi)</option>
+                </optgroup>
+                <optgroup label="🎒 Nhóm Tiểu Học (7 - 11 tuổi)">
+                  <option value="Lớp 1">Lớp 1 (7 tuổi)</option>
+                  <option value="Lớp 2">Lớp 2 (8 tuổi)</option>
+                  <option value="Lớp 3" selected>Lớp 3 (8-9 tuổi)</option>
+                  <option value="Lớp 4">Lớp 4 (9-10 tuổi)</option>
+                  <option value="Lớp 5">Lớp 5 (10-11 tuổi)</option>
+                </optgroup>
+                <optgroup label="🎧 Nhóm THCS (12 - 15 tuổi)">
+                  <option value="Lớp 6">Lớp 6 (11-12 tuổi)</option>
+                  <option value="Lớp 7">Lớp 7 (12-13 tuổi)</option>
+                  <option value="Lớp 8">Lớp 8 (13-14 tuổi)</option>
+                  <option value="Lớp 9">Lớp 9 (14-15 tuổi)</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <!-- Live Badge Gói & Bạn AI cố định -->
+          <div id="childBuddyPreviewBadge" style="background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.84rem; font-weight: 800; color: #1E40AF; display: flex; align-items: center; gap: 8px;">
+            <span>🤖</span>
+            <span id="childBuddyPreviewText">Gói Cố Định: Gói Tiểu Học (Lớp 3 - Lớp 5) • Bạn Alex the Explorer 🧗‍♂️</span>
+          </div>
+
+          <div class="form-group">
+            <label>Sở thích của con <span style="font-size: 0.8rem; color: #64748B; font-weight: normal;">(Không bắt buộc - AI sẽ đàm thoại theo chủ đề này)</span></label>
+            <input type="text" id="newChildInterests" placeholder="(Không bắt buộc) Ví dụ: Xếp hình Lego, Khủng long, Vẽ tranh...">
+          </div>
+          <div class="form-group">
+            <label style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Ảnh đại diện của bé (Avatar)</span>
+              <span style="font-size: 0.74rem; color: #0284C7; font-weight: 700;">Tự động cắt ảnh vuông 1:1</span>
+            </label>
+            <div style="display: flex; gap: 14px; align-items: center; background: #F8FAFC; padding: 12px; border-radius: 16px; border: 1.5px solid #E2E8F0;">
+              <!-- Live Preview -->
+              <div id="newChildAvatarPreview" style="width: 72px; height: 72px; min-width: 72px; border-radius: 50%; background: #EFF6FF; border: 2.5px solid #38BDF8; box-shadow: 0 4px 10px rgba(2,132,199,0.15); display: flex; align-items: center; justify-content: center; font-size: 2.3rem; overflow: hidden;">
+                🦊
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                <!-- Upload button -->
+                <div>
+                  <label for="newChildPhotoInput" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; background: white; border: 1.5px solid #0284C7; color: #0284C7; border-radius: 10px; font-weight: 800; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+                    <span>📷 Tải ảnh thật của bé</span>
+                  </label>
+                  <input type="file" id="newChildPhotoInput" accept="image/*" style="display: none;" onchange="handleAvatarFileUpload(this, 'selectedChildAvatar', 'newChildAvatarPreview', '.avatar-opt')">
+                </div>
+                <!-- Emoji chips -->
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; font-size: 1.3rem;">
+                  <span class="avatar-opt active" onclick="selectAvatar(this, '🦊', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid #0284C7; background: #E0F2FE;">🦊</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🐱', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐱</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🐶', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐶</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🦁', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🦁</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🐼', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐼</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🐰', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐰</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🦄', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🦄</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🚀', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🚀</span>
+                  <span class="avatar-opt" onclick="selectAvatar(this, '🌟', 'newChildAvatarPreview', 'selectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🌟</span>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="selectedChildAvatar" value="🦊">
+          </div>
+          <button type="submit" class="btn-mochi-primary" style="width: 100%; margin-top: 8px;">Lưu Hồ Sơ Bé</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal 6: 🎯 Chọn Bé Tham Gia Gói Học (Package-First Flow) -->
+    <div class="modal-overlay" id="modalSelectChildForPackage" style="display: none;" onclick="if(event.target===this) closeSelectChildModal();">
+      <div class="modal-content" style="max-width: 480px;">
+        <div class="modal-header">
+          <div>
+            <h3 id="packageModalTitle" style="font-weight: 900; margin: 0; color: #0369A1;">🚀 Gói Tiểu Học (Lớp 3 - Lớp 5)</h3>
+            <p id="packageModalSubtitle" style="margin: 3px 0 0 0; font-size: 0.82rem; color: #64748B;">Chọn bé sẽ tham gia phiên đàm thoại hôm nay</p>
+          </div>
+          <button class="modal-close" onclick="closeSelectChildModal()">✕</button>
+        </div>
+
+        <div id="packageChildListContainer" style="margin: 18px 0; display: flex; flex-direction: column; gap: 10px;">
+          <!-- Render danh sách bé cho gói này -->
+        </div>
+
+        <div style="border-top: 1.5px solid #F1E5D1; padding-top: 14px; text-align: center;">
+          <button type="button" onclick="closeSelectChildModal(); openAddChildModal();" style="background: none; border: none; color: #0284C7; font-weight: 800; font-size: 0.88rem; cursor: pointer;">
+            ➕ Thêm bé mới cho gói học này
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal 7: ✏️ Sửa Thông Tin Hồ Sơ Bé (Edit Child Profile Modal) -->
+    <div class="modal-overlay" id="modalEditChildOverlay" style="display: none;" onclick="if(event.target===this) closeEditChildModal();">
+      <div class="modal-content" style="max-width: 480px;">
+        <div class="modal-header">
+          <div>
+            <h3 style="font-weight: 900; margin: 0; color: #0284C7;">✏️ Sửa Thông Tin Bé</h3>
+            <p style="margin: 3px 0 0 0; font-size: 0.82rem; color: #64748B;">Cập nhật ảnh đại diện, tên tiếng Anh, biệt danh hoặc sở thích của bé</p>
+          </div>
+          <button class="modal-close" onclick="closeEditChildModal()">✕</button>
+        </div>
+
+        <form onsubmit="event.preventDefault(); handleEditChildSubmit();" style="margin-top: 14px;">
+          <input type="hidden" id="editChildId">
+          
+          <div class="form-group">
+            <label>Họ và tên chính thức của bé (tiếng Việt) *</label>
+            <input type="text" id="editChildName" placeholder="Ví dụ: Nguyễn Minh Khôi, Trần Tuệ Nhi..." required>
+          </div>
+
+          <div class="form-group">
+            <label>Tên tiếng Anh hoặc Biệt danh ở nhà 🌟 <span style="font-size: 0.8rem; color: #0284C7; font-weight: 700;">(AI sẽ xưng hô tên này khi nói tiếng Anh)</span></label>
+            <input type="text" id="editChildEnglishName" placeholder="Ví dụ: Lucas, Emma, Leo, Bon, Soc, Tom... (để trống nếu không có)">
+          </div>
+
+          <!-- Thông tin Gói Học & Lớp Cố Định (Readonly / Locked) -->
+          <div class="form-group">
+            <label style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Gói học & Bạn AI cố định</span>
+              <span style="font-size: 0.72rem; color: #15803D; font-weight: 800; background: #DCFCE7; padding: 2px 8px; border-radius: 6px;">🔒 Cố định theo gói đã mua</span>
+            </label>
+            <div id="editChildPackageInfoBox" style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+              <div>
+                <div id="editChildPackageNameText" style="font-weight: 900; color: #1E293B; font-size: 0.95rem;">Gói Tiểu Học Khám Phá (Lớp 3 - Lớp 5)</div>
+                <div id="editChildBuddyNameText" style="font-size: 0.84rem; color: #0284C7; font-weight: 700; margin-top: 3px;">Bạn đồng hành: Alex the Explorer 🧗‍♂️ • Lớp 3 (8 tuổi)</div>
+              </div>
+              <span style="font-size: 1.8rem;" id="editChildMascotEmoji">🧗‍♂️</span>
+            </div>
+            <p style="font-size: 0.75rem; color: #94A3B8; margin: 4px 0 0 2px;">* Lớp học và Bạn AI được gắn cố định với gói cước bạn đã kích hoạt. Để đổi sang nhóm tuổi khác, vui lòng liên hệ nâng cấp gói cước.</p>
+          </div>
+
+          <div class="form-group">
+            <label>Sở thích của con <span style="font-size: 0.8rem; color: #64748B; font-weight: normal;">(AI sẽ đàm thoại theo chủ đề này)</span></label>
+            <input type="text" id="editChildInterests" placeholder="Ví dụ: Khủng long, Vẽ tranh, Lego, Doraemon">
+            <div id="editChildSuggestedInterestsBox" style="margin-top: 6px; display: none;"></div>
+          </div>
+
+          <div class="form-group">
+            <label style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Ảnh đại diện của bé (Avatar)</span>
+              <span style="font-size: 0.74rem; color: #0284C7; font-weight: 700;">Tự động cắt ảnh vuông 1:1</span>
+            </label>
+            <div style="display: flex; gap: 14px; align-items: center; background: #F8FAFC; padding: 12px; border-radius: 16px; border: 1.5px solid #E2E8F0;">
+              <!-- Live Preview -->
+              <div id="editChildAvatarPreview" style="width: 72px; height: 72px; min-width: 72px; border-radius: 50%; background: #EFF6FF; border: 2.5px solid #38BDF8; box-shadow: 0 4px 10px rgba(2,132,199,0.15); display: flex; align-items: center; justify-content: center; font-size: 2.3rem; overflow: hidden;">
+                🦊
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                <!-- Upload button -->
+                <div>
+                  <label for="editChildPhotoInput" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; background: white; border: 1.5px solid #0284C7; color: #0284C7; border-radius: 10px; font-weight: 800; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+                    <span>📷 Thay ảnh thật của bé</span>
+                  </label>
+                  <input type="file" id="editChildPhotoInput" accept="image/*" style="display: none;" onchange="handleAvatarFileUpload(this, 'editSelectedChildAvatar', 'editChildAvatarPreview', '.avatar-opt-edit')">
+                </div>
+                <!-- Emoji chips -->
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; font-size: 1.3rem;">
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🦊', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🦊</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🐱', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐱</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🐶', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐶</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🦁', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🦁</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🐼', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐼</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🐰', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🐰</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🦄', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🦄</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🚀', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🚀</span>
+                  <span class="avatar-opt-edit" onclick="selectAvatar(this, '🌟', 'editChildAvatarPreview', 'editSelectedChildAvatar')" style="cursor: pointer; padding: 3px 6px; border-radius: 8px; border: 1.5px solid transparent;">🌟</span>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="editSelectedChildAvatar" value="🦊">
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button type="button" onclick="closeEditChildModal()" style="flex: 1; padding: 10px; border-radius: 12px; border: 1.5px solid #CBD5E1; background: white; font-weight: 800; cursor: pointer;">Hủy</button>
+            <button type="submit" class="btn-mochi-primary" style="flex: 2; padding: 10px;">Lưu Thay Đổi</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -124,43 +636,571 @@
   <script src="js/stt_service.js"></script>
   <script src="js/llm_service.js"></script>
   <script src="js/tts_service.js"></script>
+  <script src="js/mascot_renderer.js"></script>
   <script src="js/voice_controller.js"></script>
   <script src="js/sentiment_analyzer.js"></script>
+  <script src="js/user_service.js"></script>
   <script src="js/parent_dashboard.js"></script>
 
-  <!-- Script Điều Khiển Ứng Dụng Main -->
+  <!-- Script Điều Khiển Main -->
   <script>
     let voiceController = null;
     let parentDashboard = null;
+    let userService = null;
+    let mascotRenderer = null;
     let currentChatHistory = [];
+    let currentPersonaKey = 'toby';
 
     window.addEventListener('DOMContentLoaded', () => {
+      userService = new window.UserServiceModule();
       parentDashboard = new window.ParentDashboardModule();
+      mascotRenderer = new window.MascotRendererModule();
+      window.sentimentAnalyzer = new window.SentimentAnalyzerModule();
+
+      // Render Mascot 3D SVG trên Hero và Cards
+      renderMascotGraphics();
 
       // Khởi tạo Voice Controller kèm UI Callbacks
       voiceController = new window.VoiceControllerModule({
         onAIMessage: (text) => addBubble(text, 'ai'),
         onUserMessage: (text) => addBubble(text, 'user'),
+        onLiveSpeech: (liveText) => handleLiveSpeech(liveText),
         onStateChange: (state) => updateMicState(state),
         onTimerUpdate: (remainingSec) => updateTimerUI(remainingSec),
-        onSessionEnd: (history) => handleSessionEnd(history)
+        onSessionEnd: (history) => handleSessionEnd(history),
+        onSessionPause: (reason) => handleSessionPause(reason),
+        onSessionResume: () => handleSessionResume()
       });
+
+      // Cập nhật trạng thái người dùng & huy hiệu cảnh báo an toàn
+      updateUserUI();
+      updateSafetyAlertBadge();
 
       // Bắt sự kiện nút Góc Phụ Huynh
       document.getElementById('btnOpenParentPortal').addEventListener('click', () => {
+        const user = userService.getCurrentUser();
+        if (!user) {
+          alert('Vui lòng Đăng Nhập hoặc Đăng Ký tài khoản trước khi vào Góc Phụ Huynh!');
+          openAuthModal('login');
+          return;
+        }
         document.getElementById('modalPinOverlay').style.display = 'flex';
       });
     });
 
-    // Chọn nhân vật AI
-    function selectCharacter(personaKey) {
+    // Render đồ họa Mascot 3D Renders
+    function renderMascotGraphics() {
+      // Hero mascots
+      const heroToby = document.getElementById('heroMascotToby');
+      const heroAlex = document.getElementById('heroMascotAlex');
+      const heroLeo = document.getElementById('heroMascotLeo');
+      if (heroToby) heroToby.innerHTML = mascotRenderer.getMascot3DCardHTML('toby');
+      if (heroAlex) heroAlex.innerHTML = mascotRenderer.getMascot3DCardHTML('alex');
+      if (heroLeo) heroLeo.innerHTML = mascotRenderer.getMascot3DCardHTML('leo');
+
+      // Card mascots
+      const cardToby = document.getElementById('cardMascotToby');
+      const cardAlex = document.getElementById('cardMascotAlex');
+      const cardLeo = document.getElementById('cardMascotLeo');
+      if (cardToby) cardToby.innerHTML = mascotRenderer.getMascot3DCardHTML('toby');
+      if (cardAlex) cardAlex.innerHTML = mascotRenderer.getMascot3DCardHTML('alex');
+      if (cardLeo) cardLeo.innerHTML = mascotRenderer.getMascot3DCardHTML('leo');
+    }
+
+    // Xử lý khi nhấn Logo
+    function handleLogoClick() {
+      const user = userService.getCurrentUser();
+      if (user) {
+        document.getElementById('screenSelector').style.display = 'flex';
+        document.getElementById('screenChat').style.display = 'none';
+      } else {
+        document.getElementById('landingView').style.display = 'block';
+        document.getElementById('screenSelector').style.display = 'none';
+        document.getElementById('screenChat').style.display = 'none';
+      }
+    }
+
+    // Cập nhật giao diện theo trạng thái Đăng Nhập & Hồ sơ các bé
+    function updateUserUI() {
+      const user = userService.getCurrentUser();
+      const btnLogin = document.getElementById('btnOpenAuthLogin');
+      const btnRegister = document.getElementById('btnOpenAuthRegister');
+      const btnParentPortal = document.getElementById('btnOpenParentPortal');
+      const btnLogout = document.getElementById('btnLogout');
+      const landingView = document.getElementById('landingView');
+      const screenSelector = document.getElementById('screenSelector');
+      const userPkgBadge = document.getElementById('userPkgBadge');
+
+      if (user) {
+        // ĐÃ ĐĂNG NHẬP -> Ẩn Landing Page, Hiện Màn Hình Bé Chọn Nhân Vật
+        if (landingView) {
+          landingView.classList.add('hidden-view');
+          landingView.style.display = 'none';
+        }
+        if (screenSelector) {
+          screenSelector.classList.remove('hidden-view');
+          screenSelector.style.display = 'flex';
+        }
+
+        // Ẩn nút Đăng nhập / Đăng ký, hiện nút Góc Phụ Huynh & Đăng xuất
+        if (btnLogin) btnLogin.style.display = 'none';
+        if (btnRegister) btnRegister.style.display = 'none';
+        if (btnParentPortal) btnParentPortal.style.display = 'inline-flex';
+        if (btnLogout) btnLogout.style.display = 'inline-flex';
+
+        const greetingEl = document.getElementById('welcomeChildGreeting');
+        if (greetingEl) {
+          greetingEl.innerText = `👋 Danh Sách Các Bé Trong Gia Đình`;
+        }
+
+        // Render thẻ các bé với gói cố định
+        renderPurchasedPackages();
+
+        // Cập nhật gói cước
+        if (userPkgBadge) {
+          if (user.package === 'teen_pro' || user.isFounder) {
+            userPkgBadge.innerText = user.isFounder ? '⭐ VIP Founder' : '⭐ Teen Pro';
+            userPkgBadge.className = 'kid-pkg-badge';
+          } else if (user.package === 'kids_starter') {
+            userPkgBadge.innerText = '⭐ Kids Starter';
+            userPkgBadge.className = 'kid-pkg-badge';
+          } else {
+            userPkgBadge.innerText = '⭐ Gói Tiểu Học';
+            userPkgBadge.className = 'kid-pkg-badge';
+          }
+        }
+      } else {
+        // CHƯA ĐĂNG NHẬP -> Hiện Landing Page
+        if (landingView) {
+          landingView.classList.remove('hidden-view');
+          landingView.style.display = 'block';
+        }
+        if (screenSelector) {
+          screenSelector.classList.add('hidden-view');
+          screenSelector.style.display = 'none';
+        }
+
+        if (btnLogin) btnLogin.style.display = 'inline-block';
+        if (btnRegister) btnRegister.style.display = 'inline-block';
+        if (btnParentPortal) btnParentPortal.style.display = 'none';
+        if (btnLogout) btnLogout.style.display = 'none';
+      }
+    }
+    // Render Avatar bé (hỗ trợ cả ảnh thật DataURL/URL và Emoji)
+    function renderChildAvatarHTML(avatar, size = '100%', fontSize = '2.2rem') {
+      if (avatar && (avatar.startsWith('data:image') || avatar.startsWith('http') || avatar.startsWith('assets/'))) {
+        return `<img src="${avatar}" style="width: ${size}; height: ${size}; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: block;" alt="Avatar" />`;
+      }
+      return `<div style="width: ${size}; height: ${size}; border-radius: 50%; background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border: 2px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; font-size: ${fontSize};">${avatar || '👧'}</div>`;
+    }
+
+    // Tự động cắt ảnh vuông 1:1 chuẩn không méo và cập nhật Live Preview
+    function handleAvatarFileUpload(input, targetHiddenInputId, previewContainerId, optGroupSelector) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const size = 320;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+
+          // Tính toán khung crop vuông 1:1 từ giữa ảnh
+          const minDim = Math.min(img.width, img.height);
+          const sx = (img.width - minDim) / 2;
+          const sy = (img.height - minDim) / 2;
+
+          ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+          const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+
+          // Cập nhật giá trị vào input ẩn
+          const hiddenInput = document.getElementById(targetHiddenInputId);
+          if (hiddenInput) hiddenInput.value = croppedDataUrl;
+
+          // Cập nhật Live Preview
+          const previewBox = document.getElementById(previewContainerId);
+          if (previewBox) {
+            previewBox.innerHTML = `<img src="${croppedDataUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="Child Photo" />`;
+          }
+
+          // Bỏ chọn các emoji
+          if (optGroupSelector) {
+            document.querySelectorAll(optGroupSelector).forEach(opt => {
+              opt.classList.remove('active');
+              opt.style.borderColor = 'transparent';
+              opt.style.background = 'transparent';
+            });
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Chọn Emoji Avatar
+    function selectAvatar(el, avatar, previewId, hiddenInputId) {
+      const container = el.parentElement;
+      if (container) {
+        container.querySelectorAll('span').forEach(opt => {
+          opt.classList.remove('active');
+          opt.style.borderColor = 'transparent';
+          opt.style.background = 'transparent';
+        });
+      }
+      el.classList.add('active');
+      el.style.borderColor = '#0284C7';
+      el.style.background = '#E0F2FE';
+
+      const hiddenInput = document.getElementById(hiddenInputId || 'selectedChildAvatar');
+      if (hiddenInput) hiddenInput.value = avatar;
+
+      const previewBox = document.getElementById(previewId || 'newChildAvatarPreview');
+      if (previewBox) {
+        previewBox.innerHTML = renderChildAvatarHTML(avatar, '100%', '2.3rem');
+      }
+    }
+
+    // Render danh sách thẻ hồ sơ các bé (Ảnh bé làm hình chính + Huy hiệu bạn AI)
+    function renderPurchasedPackages() {
+      const grid = document.getElementById('purchasedPackagesGrid');
+      if (!grid || !userService) return;
+
+      const children = userService.getChildren();
+
+      if (!children || children.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: 20px; border: 2px dashed #CBD5E1;">
+            <span style="font-size: 3rem; display: block; margin-bottom: 10px;">👧</span>
+            <h3 style="font-weight: 900; margin: 0 0 6px 0;">Chưa có hồ sơ bé nào</h3>
+            <button onclick="openAddChildModal()" class="btn-mochi-primary" style="margin-top: 10px;">➕ Thêm Hồ Sơ Bé Mới</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = children.map(c => {
+        const personaKey = c.assignedPersona || (c.age <= 6 ? 'toby' : (c.age <= 11 ? 'alex' : 'leo'));
+        const cardClass = personaKey === 'toby' ? 'card-toby' : (personaKey === 'alex' ? 'card-alex' : 'card-leo');
+        const pillClass = personaKey === 'toby' ? 'pill-small' : (personaKey === 'alex' ? 'pill-big' : 'pill-teen');
+        const pkgName = c.packageName || (personaKey === 'toby' ? 'Gói Mầm Non & Khởi Đầu (Mầm non - Lớp 2)' : (personaKey === 'alex' ? 'Gói Tiểu Học Khám Phá (Lớp 3 - Lớp 5)' : 'Gói THCS Tự Tin Bản Xứ (Lớp 6 - Lớp 9)'));
+        const buddy = c.buddyName || (personaKey === 'toby' ? 'Toby the Turtle 🐢' : (personaKey === 'alex' ? 'Alex the Explorer 🧗‍♂️' : 'Leo the Teen Peer 🎮'));
+
+        const displayName = c.englishName && c.englishName.trim()
+          ? `Bé ${c.englishName} <span style="font-size:0.86rem; color:#64748B; font-weight:700;">(${c.name})</span>`
+          : `Bé ${c.name} ${c.nickname && c.nickname.trim() && c.nickname.trim() !== c.name.trim() ? '<span style="font-size:0.86rem; color:#64748B; font-weight:700;">(' + c.nickname.trim() + ')</span>' : ''}`;
+
+        // 🌟 Hình đại diện chính là ẢNH / ICON CỦA BÉ
+        const childAvatarHTML = renderChildAvatarHTML(c.avatar, '100%', '2.2rem');
+        
+        // 🤖 Huy hiệu Bạn AI đồng hành gắn góc dưới avatar bé
+        const mascotBadgeHTML = `
+          <div style="position: absolute; bottom: -3px; right: -3px; width: 30px; height: 30px; border-radius: 50%; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.18); border: 1.5px solid white; display: flex; align-items: center; justify-content: center; overflow: hidden;" title="Bạn đồng hành: ${buddy}">
+            ${mascotRenderer.getMascot3DCardHTML(personaKey)}
+          </div>
+        `;
+
+        return `
+          <div class="persona-card ${cardClass}" onclick="startSessionForChild('${c.id}')" style="cursor: pointer; transition: all 0.25s;">
+            <div class="persona-card-avatar">
+              ${childAvatarHTML}
+              ${mascotBadgeHTML}
+            </div>
+            <div class="persona-card-body">
+              <div class="persona-card-top-row">
+                <span class="persona-pill ${pillClass}">🎒 ${c.grade || c.age + ' tuổi'}</span>
+                <button type="button" onclick="event.stopPropagation(); openEditChildModal('${c.id}')" style="background: #F1F5F9; color: #334155; border: 1.5px solid #CBD5E1; font-weight: 800; font-size: 0.74rem; padding: 3px 9px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="Chỉnh sửa thông tin bé">
+                  ✏️ Sửa
+                </button>
+              </div>
+              <h3 class="persona-name">${displayName}</h3>
+              <div style="font-weight: 800; color: #0284C7; font-size: 0.82rem; margin-bottom: 2px;">
+                Bạn đồng hành: ${buddy}
+              </div>
+              <p class="persona-tagline">
+                📚 ${pkgName} • Đã nói <strong>${c.totalWords || 0} từ</strong>
+              </p>
+            </div>
+            <div class="persona-card-arrow">
+              Vào Học ➔
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Bắt đầu đàm thoại trực tiếp cho bé với đúng gói & bạn AI cố định
+    function startSessionForChild(childId) {
+      const children = userService.getChildren();
+      const child = children.find(c => c.id === childId) || userService.getActiveChild();
+      if (!child) return;
+
+      userService.setActiveChild(child.id);
+      const personaKey = child.assignedPersona || (child.age <= 6 ? 'toby' : (child.age <= 11 ? 'alex' : 'leo'));
+      currentPersonaKey = personaKey;
+
       document.getElementById('screenSelector').style.display = 'none';
       document.getElementById('screenChat').style.display = 'flex';
 
-      const persona = voiceController.startSession(personaKey);
-      document.getElementById('activeAvatar').innerText = persona.avatar;
+      const badge = document.getElementById('stealthAlertBadge');
+      if (badge) badge.style.display = 'none';
+
+      const persona = voiceController.startSession(personaKey, child);
+
+      document.getElementById('mascotAvatarBox').innerHTML = mascotRenderer.getMascot3DStageHTML(personaKey);
+      document.getElementById('activeAvatarWrap').innerHTML = mascotRenderer.getMascot3DCardHTML(personaKey);
+
       document.getElementById('activeName').innerText = persona.name;
       document.getElementById('activeTagline').innerText = persona.tagline;
+      document.getElementById('stageCharacterName').innerText = persona.name;
+      document.getElementById('stageCharacterTagline').innerText = persona.tagline;
+      document.getElementById('mascotStateText').innerText = `Bạn ${persona.name} đang sẵn sàng trò chuyện cùng bé ${child.englishName || child.name}`;
+      document.getElementById('mascotSubStateText').innerText = 'Bé hãy nhìn vào bạn AI và bấm Micro để nói nhé!';
+    }
+
+    // Modal Thêm Bé Mới
+    function openAddChildModal() {
+      const nameInput = document.getElementById('newChildName');
+      const englishNameInput = document.getElementById('newChildEnglishName');
+      const interestsInput = document.getElementById('newChildInterests');
+      if (nameInput) nameInput.value = '';
+      if (englishNameInput) englishNameInput.value = '';
+      if (interestsInput) interestsInput.value = ''; // Để trống mặc định
+
+      document.getElementById('newChildAvatarPreview').innerHTML = renderChildAvatarHTML('🦊', '100%', '2.3rem');
+      document.getElementById('selectedChildAvatar').value = '🦊';
+      document.querySelectorAll('#modalAddChildOverlay .avatar-opt').forEach(opt => {
+        if (opt.innerText.trim() === '🦊') {
+          opt.classList.add('active');
+          opt.style.borderColor = '#0284C7';
+          opt.style.background = '#E0F2FE';
+        } else {
+          opt.classList.remove('active');
+          opt.style.borderColor = 'transparent';
+          opt.style.background = 'transparent';
+        }
+      });
+      document.getElementById('modalAddChildOverlay').style.display = 'flex';
+      updateBuddyPreviewBadge(8, 'Lớp 3');
+    }
+
+    function closeAddChildModal() {
+      document.getElementById('modalAddChildOverlay').style.display = 'none';
+    }
+
+    function updateBuddyPreviewBadge(ageVal, gradeVal) {
+      const age = parseInt(ageVal, 10) || 8;
+      const grade = (gradeVal || '').trim();
+      const badge = document.getElementById('childBuddyPreviewBadge');
+      const text = document.getElementById('childBuddyPreviewText');
+      if (!badge || !text) return;
+
+      const isPreschool = age <= 6 || grade.includes('Mầm non') || grade.includes('Chồi') || grade.includes('Mầm') || grade.includes('Lá') || grade.includes('Lớp 1') || grade.includes('Lớp 2') || grade.includes('4t') || grade.includes('5t') || grade.includes('6t');
+      const isSecondary = !isPreschool && (age >= 12 || grade.includes('Lớp 6') || grade.includes('Lớp 7') || grade.includes('Lớp 8') || grade.includes('Lớp 9'));
+
+      if (isPreschool) {
+        badge.style.background = '#FEF3C7';
+        badge.style.borderColor = '#FDE68A';
+        badge.style.color = '#92400E';
+        text.innerText = 'Gói Cố Định: Gói Mầm Non & Khởi Đầu • Bạn Toby the Turtle 🐢';
+      } else if (isSecondary) {
+        badge.style.background = '#F3E8FF';
+        badge.style.borderColor = '#E9D5FF';
+        badge.style.color = '#6B21A8';
+        text.innerText = 'Gói Cố Định: Gói THCS Tự Tin Bản Xứ • Bạn Leo the Teen Peer 🎮';
+      } else {
+        badge.style.background = '#EFF6FF';
+        badge.style.borderColor = '#BFDBFE';
+        badge.style.color = '#1E40AF';
+        text.innerText = 'Gói Cố Định: Gói Tiểu Học Khám Phá (Lớp 3-5) • Bạn Alex the Explorer 🧗‍♂️';
+      }
+    }
+
+    function handleAgeInputChange(ageVal) {
+      const age = parseInt(ageVal, 10);
+      const gradeSelect = document.getElementById('newChildGrade');
+      if (!gradeSelect) return;
+
+      if (age <= 4) gradeSelect.value = "Mầm non Mầm (4t)";
+      else if (age === 5) gradeSelect.value = "Mầm non Chồi (5t)";
+      else if (age === 6) gradeSelect.value = "Tiền tiểu học Lá (6t)";
+      else if (age === 7) gradeSelect.value = "Lớp 1";
+      else if (age === 8) gradeSelect.value = "Lớp 2";
+      else if (age === 9) gradeSelect.value = "Lớp 3";
+      else if (age === 10) gradeSelect.value = "Lớp 4";
+      else if (age === 11) gradeSelect.value = "Lớp 5";
+      else if (age === 12) gradeSelect.value = "Lớp 6";
+      else if (age === 13) gradeSelect.value = "Lớp 7";
+      else if (age === 14) gradeSelect.value = "Lớp 8";
+      else gradeSelect.value = "Lớp 9";
+
+      updateBuddyPreviewBadge(age, gradeSelect.value);
+    }
+
+    function handleGradeSelectChange(gradeVal) {
+      const ageInput = document.getElementById('newChildAge');
+      if (!ageInput) return;
+
+      let age = 8;
+      if (gradeVal.includes('Mầm (4t)')) age = 4;
+      else if (gradeVal.includes('Chồi (5t)')) age = 5;
+      else if (gradeVal.includes('Lá (6t)')) age = 6;
+      else if (gradeVal.includes('Lớp 1')) age = 7;
+      else if (gradeVal.includes('Lớp 2')) age = 8;
+      else if (gradeVal.includes('Lớp 3')) age = 8;
+      else if (gradeVal.includes('Lớp 4')) age = 9;
+      else if (gradeVal.includes('Lớp 5')) age = 10;
+      else if (gradeVal.includes('Lớp 6')) age = 11;
+      else if (gradeVal.includes('Lớp 7')) age = 12;
+      else if (gradeVal.includes('Lớp 8')) age = 13;
+      else if (gradeVal.includes('Lớp 9')) age = 14;
+
+      ageInput.value = age;
+      updateBuddyPreviewBadge(age, gradeVal);
+    }
+
+    function handleAddChildSubmit() {
+      const name = document.getElementById('newChildName').value;
+      const englishName = document.getElementById('newChildEnglishName').value;
+      const age = document.getElementById('newChildAge').value;
+      const grade = document.getElementById('newChildGrade').value;
+      const interests = document.getElementById('newChildInterests').value;
+      const avatar = document.getElementById('selectedChildAvatar').value || '🦊';
+
+      const res = userService.addChild({ englishName, name, nickname: englishName || name, age, grade, interests, avatar });
+      if (res.success) {
+        alert(`Đã thêm thành công hồ sơ của bé ${englishName || name}!`);
+        closeAddChildModal();
+        updateUserUI();
+      } else {
+        alert(res.message || 'Không thể thêm hồ sơ bé!');
+      }
+    }
+
+    // Modal Sửa Hồ Sơ Bé (Edit Child Modal - Giữ cố định gói học & lớp học đã mua)
+    function openEditChildModal(childId) {
+      const children = userService.getChildren();
+      const child = children.find(c => c.id === childId);
+      if (!child) return;
+
+      document.getElementById('editChildId').value = child.id;
+      document.getElementById('editChildName').value = child.name || '';
+      document.getElementById('editChildEnglishName').value = child.englishName || '';
+      
+      const pkgName = child.packageName || (child.age <= 6 ? 'Gói Mầm Non & Khởi Đầu (Mầm non - Lớp 2)' : (child.age <= 11 ? 'Gói Tiểu Học Khám Phá (Lớp 3 - Lớp 5)' : 'Gói THCS Tự Tin Bản Xứ (Lớp 6 - Lớp 9)'));
+      const buddyName = child.buddyName || (child.age <= 6 ? 'Toby the Turtle 🐢' : (child.age <= 11 ? 'Alex the Explorer 🧗‍♂️' : 'Leo the Teen Peer 🎮'));
+      const mascotEmoji = child.assignedPersona === 'toby' ? '🐢' : (child.assignedPersona === 'alex' ? '🧗‍♂️' : '🎮');
+
+      const pkgNameEl = document.getElementById('editChildPackageNameText');
+      const buddyNameEl = document.getElementById('editChildBuddyNameText');
+      const mascotEmojiEl = document.getElementById('editChildMascotEmoji');
+
+      if (pkgNameEl) pkgNameEl.innerText = pkgName;
+      if (buddyNameEl) buddyNameEl.innerHTML = `Bạn đồng hành: <strong>${buddyName}</strong> • Lớp: <strong>${child.grade || child.age + ' tuổi'}</strong>`;
+      if (mascotEmojiEl) mascotEmojiEl.innerText = mascotEmoji;
+
+      document.getElementById('editChildInterests').value = child.interests || '';
+
+      // Hiển thị gợi ý sở thích từ AI nếu có trong hồ sơ bé
+      const sugBox = document.getElementById('editChildSuggestedInterestsBox');
+      if (sugBox) {
+        if (child.suggestedInterests && child.suggestedInterests.length > 0) {
+          sugBox.style.display = 'block';
+          sugBox.innerHTML = `
+            <div style="font-size: 0.76rem; color: #92400E; font-weight: 800; margin-bottom: 4px;">💡 AI phát hiện sở thích qua đàm thoại (Bấm '+' để chèn nhanh):</div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              ${child.suggestedInterests.map(item => {
+                const txt = typeof item === 'string' ? item : item.text;
+                return `
+                  <span onclick="appendSuggestedInterestToInput('${txt}')" style="background: #FEF3C7; border: 1px solid #FCD34D; color: #92400E; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                    ➕ ${txt}
+                  </span>
+                `;
+              }).join('')}
+            </div>
+          `;
+        } else {
+          sugBox.style.display = 'none';
+          sugBox.innerHTML = '';
+        }
+      }
+      
+      const avatarVal = child.avatar || '🦊';
+      document.getElementById('editSelectedChildAvatar').value = avatarVal;
+
+      // Update Edit Avatar Preview
+      const editPreview = document.getElementById('editChildAvatarPreview');
+      if (editPreview) {
+        editPreview.innerHTML = renderChildAvatarHTML(avatarVal, '100%', '2.3rem');
+      }
+
+      // Highlight active avatar chip if it's emoji
+      document.querySelectorAll('.avatar-opt-edit').forEach(opt => {
+        if (opt.innerText.trim() === avatarVal) {
+          opt.classList.add('active');
+          opt.style.borderColor = '#0284C7';
+          opt.style.background = '#E0F2FE';
+        } else {
+          opt.classList.remove('active');
+          opt.style.borderColor = 'transparent';
+          opt.style.background = 'transparent';
+        }
+      });
+
+      document.getElementById('modalEditChildOverlay').style.display = 'flex';
+    }
+
+    function closeEditChildModal() {
+      document.getElementById('modalEditChildOverlay').style.display = 'none';
+    }
+
+    function appendSuggestedInterestToInput(interestText) {
+      const input = document.getElementById('editChildInterests');
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) {
+        input.value = interestText;
+      } else if (!val.toLowerCase().includes(interestText.toLowerCase())) {
+        input.value = val + ', ' + interestText;
+      }
+    }
+
+    function handleEditChildSubmit() {
+      const childId = document.getElementById('editChildId').value;
+      const name = document.getElementById('editChildName').value;
+      const englishName = document.getElementById('editChildEnglishName').value;
+      const interests = document.getElementById('editChildInterests').value;
+      const avatar = document.getElementById('editSelectedChildAvatar').value || '🦊';
+
+      const res = userService.updateChild(childId, { englishName, name, nickname: englishName || name, interests, avatar });
+      if (res.success) {
+        alert(`Đã cập nhật thành công hồ sơ của bé ${englishName || name}!`);
+        closeEditChildModal();
+        updateUserUI();
+      } else {
+        alert(res.message || 'Không thể cập nhật hồ sơ bé!');
+      }
+    }
+
+    // Chuyển tab xem báo cáo bé trong Góc Phụ Huynh
+    function switchReportChildTab(childId) {
+      renderParentReport(childId);
+    }
+
+    // Quay lại màn hình chọn nhân vật từ phòng chat
+    function handleBackToSelector() {
+      if (voiceController) {
+        voiceController.stopSession();
+      }
+      document.getElementById('screenChat').style.display = 'none';
+      document.getElementById('screenSelector').style.display = 'flex';
+      document.getElementById('chatBody').innerHTML = '';
+      updateMicState('idle');
+      updateUserUI();
+      updateSafetyAlertBadge();
     }
 
     // Thêm bong bóng chat
@@ -173,23 +1213,62 @@
       chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    // Cập nhật trạng thái Micro UI
+    // Xử lý khi cuộc trò chuyện tạm dừng
+    function handleSessionPause(reasonText) {
+      const btnMic = document.getElementById('btnMic');
+      const statusLabel = document.getElementById('statusLabel');
+      const stateText = document.getElementById('mascotStateText');
+      const subStateText = document.getElementById('mascotSubStateText');
+
+      if (btnMic) btnMic.className = 'btn-mic';
+      if (statusLabel) statusLabel.innerText = '⏸️ Đang tạm dừng: Bé chỉ cần cất tiếng hoặc bấm Mic để tiếp tục!';
+      if (stateText) stateText.innerText = '💤 Bạn AI đang ngủ tạm nghỉ chờ bé quay lại...';
+      if (subStateText) subStateText.innerText = reasonText || 'Bé hãy cất tiếng nói "I\'m back" hoặc bấm nút Micro bất cứ lúc nào nhé!';
+    }
+
+    // Xử lý khi cuộc trò chuyện tiếp tục trở lại
+    function handleSessionResume() {
+      const stateText = document.getElementById('mascotStateText');
+      const subStateText = document.getElementById('mascotSubStateText');
+      if (stateText) stateText.innerText = '🎧 Chào mừng bé quay trở lại! Đang lắng nghe...';
+      if (subStateText) subStateText.innerText = 'Bé hãy nói tự nhiên cùng bạn AI nhé!';
+    }
+
+    // Cập nhật trạng thái Micro UI & Mascot mấp máy môi sinh động
     function updateMicState(state) {
       const btnMic = document.getElementById('btnMic');
       const statusLabel = document.getElementById('statusLabel');
+      const mascotBox = document.getElementById('mascotAvatarBox');
+      const stage = document.getElementById('mascotInteractiveStage');
+      const stateText = document.getElementById('mascotStateText');
+      const subStateText = document.getElementById('mascotSubStateText');
+
+      mascotRenderer.setMascotState(mascotBox, state);
+      mascotRenderer.setMascotState(stage, state);
 
       if (state === 'handsfree_on' || state === 'listening') {
         btnMic.className = 'btn-mic listening';
         statusLabel.innerText = '🔴 MICRO LIÊN TỤC: Đang lắng nghe bé cất tiếng...';
+        stateText.innerText = '🎧 Đang lắng nghe bé cất tiếng...';
+        subStateText.innerText = 'Bé hãy nói tự nhiên bằng tiếng Anh nhé!';
       } else if (state === 'processing') {
         btnMic.className = 'btn-mic listening';
         statusLabel.innerText = '🧠 AI đang suy nghĩ câu trả lời...';
+        stateText.innerText = '🧠 Bạn AI đang lắng nghe & suy nghĩ...';
+        subStateText.innerText = 'Chuẩn bị phản hồi cho bé trong giây lát';
       } else if (state === 'speaking') {
         btnMic.className = 'btn-mic';
         statusLabel.innerText = '🔊 AI đang cất tiếng nói ra loa...';
+        stateText.innerText = '🗣️ Bạn AI đang trò chuyện & phát âm...';
+        subStateText.innerText = 'Bé chú ý lắng nghe cách phát âm chuẩn nhé!';
+      } else if (state === 'paused') {
+        btnMic.className = 'btn-mic';
+        statusLabel.innerText = '⏸️ Đang tạm dừng: Bé chỉ cần cất tiếng hoặc bấm Mic để tiếp tục';
       } else {
         btnMic.className = 'btn-mic';
         statusLabel.innerText = 'Bật Micro 1 lần để đàm thoại rảnh tay liên tục';
+        stateText.innerText = 'Đang sẵn sàng đàm thoại';
+        subStateText.innerText = 'Chạm Micro bên dưới để bắt đầu';
       }
     }
 
@@ -201,55 +1280,230 @@
       document.getElementById('timerBadge').innerText = `⏱️ ${formatted}`;
     }
 
-    // Xử lý khi bấm nút Micro (Bật/Tắt chế độ rảnh tay liên tục)
+    // Xử lý phụ đề nhận diện giọng nói trực tiếp thời gian thực
+    function handleLiveSpeech(liveText) {
+      const subStateText = document.getElementById('mascotSubStateText');
+      const statusLabel = document.getElementById('statusLabel');
+      if (liveText && liveText.trim() !== '') {
+        if (subStateText) subStateText.innerText = `🗣️ Đang nghe bé nói: "${liveText}"...`;
+        if (statusLabel) statusLabel.innerText = `🎤 Đang thu âm: "${liveText}"`;
+      }
+    }
+
+    // Xử lý khi gửi câu thoại từ ô gõ chữ
+    function handleSendTextMessage(event) {
+      if (event) event.preventDefault();
+      const input = document.getElementById('chatTextInput');
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      if (voiceController) {
+        voiceController.processUserText(text);
+      }
+    }
+
+    // Xử lý khi bấm nút Micro (hỗ trợ cắt ngang lời AI ngay lập tức khi đang nói)
     function handleMicClick() {
+      if (voiceController && voiceController.isAISpeaking) {
+        voiceController.interruptAI();
+        return;
+      }
       voiceController.toggleHandsFree();
     }
 
-    // Xử lý khi phiên thúc kết
+    // Xử lý khi phiên kết thúc
     function handleSessionEnd(history) {
       currentChatHistory = history;
+      const activeChild = userService.getActiveChild();
+      
+      let sessionData = {
+        wordCount: 15,
+        topicSummary: 'Luyện tập giao tiếp tiếng Anh lưu loát',
+        sentiment: { positive: 85, anxiety: 10, sadness: 5 }
+      };
+
+      if (window.sentimentAnalyzer && history && history.length > 0) {
+        sessionData = window.sentimentAnalyzer.analyzeSession(history, activeChild);
+      }
+
+      if (activeChild) {
+        userService.recordChildSession(activeChild.id, sessionData);
+      }
+
       renderParentReport();
+      updateSafetyAlertBadge();
     }
 
-    // Render báo cáo Phụ huynh
-    function renderParentReport() {
+    // Xử lý khi Phụ Huynh chấp nhận gợi ý sở thích từ AI
+    function handleAcceptInterest(childId, interestText) {
+      const res = userService.acceptSuggestedInterest(childId, interestText);
+      if (res.success) {
+        renderParentReport(childId);
+        updateUserUI();
+      }
+    }
+
+    // Xử lý khi Phụ Huynh từ chối / bỏ qua gợi ý sở thích từ AI
+    function handleRejectInterest(childId, interestText) {
+      const res = userService.rejectSuggestedInterest(childId, interestText);
+      if (res.success) {
+        renderParentReport(childId);
+        updateUserUI();
+      }
+    }
+
+    // Render Báo Cáo Phụ Huynh Đa Hồ Sơ
+    function renderParentReport(selectedChildId) {
       const container = document.getElementById('parentReportContainer');
-      if (!currentChatHistory || currentChatHistory.length <= 2) return;
+      if (!container || !parentDashboard) return;
 
-      const report = parentDashboard.generateReport(currentChatHistory);
-      container.innerHTML = `
-        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-          <span><strong>Ngày:</strong> ${report.date}</span>
-          <span><strong>Số từ phát biểu:</strong> ~${report.wordCount} từ</span>
-        </div>
-        <div style="margin-bottom:12px;">
-          <strong>Chủ đề quan tâm:</strong> ${report.topics.map(t => `<span style="background:#E0E7FF; color:#3730A3; padding:2px 8px; border-radius:12px; font-size:0.85rem; margin-right:4px;">${t}</span>`).join('')}
-        </div>
-        <div class="insight-card">
-          <div class="insight-title">💡 Thấu Hiểu Cảm Xúc Bé</div>
-          <div>${report.insight}</div>
-        </div>
-        <div class="advice-card">
-          <div class="advice-title">📌 Gợi Ý Hành Động Cho Bố Mẹ</div>
-          <div>${report.advice}</div>
-        </div>
-      `;
+      const activeChild = userService.getActiveChild();
+      const targetChildId = selectedChildId || (activeChild ? activeChild.id : null);
+      container.innerHTML = parentDashboard.renderReportHTML(targetChildId);
     }
 
-    // Quản lý Modal PIN & Dashboard
-    function submitPin() {
-      const pin = document.getElementById('inputPin').value;
-      if (parentDashboard.verifyPin(pin)) {
-        document.getElementById('modalPinOverlay').style.display = 'none';
-        document.getElementById('modalDashboardOverlay').style.display = 'flex';
-        renderParentReport();
+    // Quản lý Cảnh Báo An Toàn Học Đường & Tâm Lý Ẩn Cho Phụ Huynh
+    function handleNewSafetyAlert(alertItem) {
+      updateSafetyAlertBadge();
+      
+      // Nếu trình duyệt hỗ trợ Web Notification và đã cấp quyền, gửi thông báo bảo mật
+      if ("Notification" in window && Notification.permission === "granted") {
+        try {
+          new Notification("🛡️ AI English Buddy: Lưu ý an toàn cho Phụ Huynh", {
+            body: `Hệ thống vừa ghi nhận chia sẻ cần phụ huynh đồng hành từ bé: "${alertItem.childQuote}"`
+          });
+        } catch (e) {}
+      } else if ("Notification" in window && Notification.permission !== "denied") {
+        try {
+          Notification.requestPermission();
+        } catch (e) {}
+      }
+    }
+
+    function updateSafetyAlertBadge() {
+      const badge = document.getElementById('stealthAlertBadge');
+      if (!badge) return;
+      const unreadCount = window.sentimentAnalyzer ? window.sentimentAnalyzer.getUnreadAlertsCount() : 0;
+      if (unreadCount > 0) {
+        badge.style.display = 'inline-block';
       } else {
-        alert('Mã PIN không chính xác! (Mặc định: 1234)');
+        badge.style.display = 'none';
+      }
+    }
+
+    function openSafetyAlertModal() {
+      const modal = document.getElementById('modalSafetyAlertOverlay');
+      const container = document.getElementById('safetyAlertsListContainer');
+      if (!modal || !container || !window.sentimentAnalyzer) return;
+
+      const alerts = window.sentimentAnalyzer.getSafetyAlerts();
+      if (alerts.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 24px 10px; color: #64748B;">
+            <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">✨</span>
+            <p style="font-weight: 700; margin: 0;">Hiện chưa có cảnh báo an toàn nào.</p>
+            <p style="font-size: 0.85rem; margin-top: 4px;">Các cuộc trò chuyện của bé hoàn toàn an toàn và vui vẻ!</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = alerts.map(item => `
+          <div style="background: ${item.severity === 'critical' ? '#FFF5F5' : '#FFFBEB'}; border: 1.5px solid ${item.severity === 'critical' ? '#FECACA' : '#FDE68A'}; border-radius: 14px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-weight: 900; color: ${item.severity === 'critical' ? '#DC2626' : '#D97706'}; font-size: 0.95rem;">
+                ${item.categoryName}
+              </span>
+              <span style="font-size: 0.76rem; color: #94A3B8; font-weight: 600;">🕒 ${item.timestamp}</span>
+            </div>
+
+            <div style="background: white; border-radius: 10px; padding: 10px 12px; border-left: 3.5px solid ${item.severity === 'critical' ? '#EF4444' : '#F59E0B'}; margin-bottom: 12px;">
+              <div style="font-size: 0.78rem; color: #64748B; font-weight: 700; margin-bottom: 2px;">💬 Câu nói của con:</div>
+              <div style="font-style: italic; color: #1E293B; font-weight: 800; font-size: 0.92rem;">"${item.childQuote}"</div>
+            </div>
+
+            <div style="font-size: 0.82rem; color: #334155;">
+              <div style="font-weight: 800; color: #475569; margin-bottom: 6px;">💡 Lời khuyên tâm lý cho Cha Mẹ:</div>
+              <ul style="margin: 0; padding-left: 18px; line-height: 1.55; display: flex; flex-direction: column; gap: 4px;">
+                ${item.advice.map(adv => `<li>${adv}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeSafetyAlertModal() {
+      const modal = document.getElementById('modalSafetyAlertOverlay');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function acknowledgeSafetyAlerts() {
+      if (window.sentimentAnalyzer) {
+        window.sentimentAnalyzer.markAllAlertsAsRead();
+      }
+      updateSafetyAlertBadge();
+      closeSafetyAlertModal();
+    }
+
+    // Quản lý Modal PIN Phụ huynh (Khóa 30 giây chống trẻ em đoán mò)
+    let failedPinAttempts = 0;
+    let pinLockoutUntil = 0;
+
+    function submitPin() {
+      const now = Date.now();
+      const errorEl = document.getElementById('pinErrorMsg');
+
+      if (now < pinLockoutUntil) {
+        const waitSec = Math.ceil((pinLockoutUntil - now) / 1000);
+        if (errorEl) {
+          errorEl.innerText = `⚠️ Đã nhập sai quá nhiều lần. Vui lòng thử lại sau ${waitSec} giây!`;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      const pinInput = document.getElementById('inputPin');
+      const pin = pinInput ? pinInput.value.trim() : '';
+
+      if (parentDashboard.verifyPin(pin)) {
+        failedPinAttempts = 0;
+        if (errorEl) errorEl.style.display = 'none';
+        if (pinInput) pinInput.value = '';
+        document.getElementById('modalPinOverlay').style.display = 'none';
+        
+        // Kiểm tra nếu có cảnh báo an toàn chưa đọc, mở ngay Safety Alert Modal
+        const unreadCount = window.sentimentAnalyzer ? window.sentimentAnalyzer.getUnreadAlertsCount() : 0;
+        if (unreadCount > 0) {
+          openSafetyAlertModal();
+        } else {
+          document.getElementById('modalDashboardOverlay').style.display = 'flex';
+          renderParentReport();
+        }
+      } else {
+        failedPinAttempts++;
+        if (pinInput) pinInput.value = '';
+        if (failedPinAttempts >= 3) {
+          pinLockoutUntil = Date.now() + 30000; // Khóa 30s chống đoán mò
+          if (errorEl) {
+            errorEl.innerText = '⚠️ Nhập sai 3 lần liên tiếp. Tạm khóa 30 giây để bảo mật!';
+            errorEl.style.display = 'block';
+          }
+        } else {
+          if (errorEl) {
+            errorEl.innerText = 'Mã PIN không chính xác!';
+            errorEl.style.display = 'block';
+          }
+        }
       }
     }
 
     function closePinModal() {
+      const pinInput = document.getElementById('inputPin');
+      const errorEl = document.getElementById('pinErrorMsg');
+      if (pinInput) pinInput.value = '';
+      if (errorEl) errorEl.style.display = 'none';
       document.getElementById('modalPinOverlay').style.display = 'none';
     }
 
@@ -257,14 +1511,135 @@
       document.getElementById('modalDashboardOverlay').style.display = 'none';
     }
 
-    function saveAppSettings() {
-      const newPin = document.getElementById('settingPin').value;
-      const gKey = document.getElementById('settingGemini').value;
-      const cKey = document.getElementById('settingCartesia').value;
-      const dKey = document.getElementById('settingDeepgram').value;
-      parentDashboard.saveSettings(newPin, gKey, cKey, dKey);
-      alert('Đã lưu cài đặt thành công!');
-      closeDashboardModal();
+    function saveNewPin() {
+      const newPin = document.getElementById('settingNewPin').value;
+      if (parentDashboard.updatePin(newPin)) {
+        alert('Đã cập nhật mã PIN phụ huynh mới thành công!');
+        document.getElementById('settingNewPin').value = '';
+      } else {
+        alert('Vui lòng nhập mã PIN gồm đúng 4 chữ số!');
+      }
+    }
+
+    // Quản lý Modal Đăng Nhập / Đăng Ký
+    function openAuthModal(defaultTab = 'login') {
+      switchAuthTab(defaultTab);
+      const modal = document.getElementById('modalAuthOverlay');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    }
+
+    function closeAuthModal() {
+      const modal = document.getElementById('modalAuthOverlay');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    function switchAuthTab(tab) {
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegister = document.getElementById('tabRegister');
+      const formLogin = document.getElementById('formLogin');
+      const formRegister = document.getElementById('formRegister');
+      const authTitle = document.getElementById('authModalTitle');
+
+      if (tab === 'login') {
+        if (tabLogin) tabLogin.className = 'auth-tab active';
+        if (tabRegister) tabRegister.className = 'auth-tab';
+        if (formLogin) formLogin.style.display = 'block';
+        if (formRegister) formRegister.style.display = 'none';
+        if (authTitle) authTitle.innerText = '🔑 Đăng Nhập Phụ Huynh';
+      } else {
+        if (tabLogin) tabLogin.className = 'auth-tab';
+        if (tabRegister) tabRegister.className = 'auth-tab active';
+        if (formLogin) formLogin.style.display = 'none';
+        if (formRegister) formRegister.style.display = 'block';
+        if (authTitle) authTitle.innerText = '📝 Đăng Ký Tài Khoản Mới';
+      }
+    }
+
+    // Ẩn / Hiện mật khẩu khi bấm nút con mắt
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerText = '🙈';
+        btn.title = 'Ẩn mật khẩu';
+      } else {
+        input.type = 'password';
+        btn.innerText = '👁️';
+        btn.title = 'Hiện mật khẩu';
+      }
+    }
+
+    function handleLogin() {
+      const u = (document.getElementById('loginUsername').value || '').trim();
+      const p = (document.getElementById('loginPassword').value || '').trim();
+      
+      if (!u || !p) {
+        alert('Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!');
+        return;
+      }
+
+      const res = userService.login(u, p);
+      if (res.success) {
+        updateUserUI();
+        closeAuthModal();
+      } else {
+        alert(res.message || 'Sai tên đăng nhập hoặc mật khẩu!');
+      }
+    }
+
+    function handleRegister() {
+      const u = (document.getElementById('regUsername').value || '').trim();
+      const p = (document.getElementById('regPassword').value || '').trim();
+      const pin = (document.getElementById('regParentPin').value || '').trim() || '1234';
+
+      if (!u || !p) {
+        alert('Vui lòng điền đầy đủ tên tài khoản phụ huynh và mật khẩu!');
+        return;
+      }
+
+      const res = userService.register(u, p, pin);
+      if (res.success) {
+        updateUserUI();
+        closeAuthModal();
+        alert(`Đăng ký thành công tài khoản phụ huynh! Mã PIN bảo mật Góc Phụ Huynh của bạn là: ${pin}`);
+        
+        // Tự động mở modal thiết lập hồ sơ bé để phụ huynh điền thông tin chi tiết
+        openAddChildModal();
+      } else {
+        alert(res.message);
+      }
+    }
+
+    // Đăng nhập / Đăng ký 1-chạm với Google Account
+    function handleGoogleAuth() {
+      const googleEmail = prompt("Nhập địa chỉ Email Google của bạn để đăng nhập / liên kết tài khoản:", "phuhuynh@gmail.com");
+      if (!googleEmail || !googleEmail.includes('@')) {
+        return;
+      }
+      
+      const res = userService.loginWithGoogle(googleEmail);
+      if (res.success) {
+        updateUserUI();
+        closeAuthModal();
+        if (res.isNew) {
+          alert(`Đã liên kết tài khoản Google (${googleEmail}) thành công! Mã PIN phụ huynh mặc định là 1234.`);
+          openAddChildModal();
+        }
+      } else {
+        alert(res.message);
+      }
+    }
+
+    function handleLogout() {
+      userService.logout();
+      updateUserUI();
+      document.getElementById('screenChat').style.display = 'none';
     }
   </script>
 </body>
